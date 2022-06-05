@@ -1,0 +1,5 @@
+# Core dependencies
+git+https://github.com/erohkohl/mlsolver.git
+
+# Development only
+pylint

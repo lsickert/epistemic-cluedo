@@ -3,32 +3,38 @@
         {
             "id": "scarlett",
             "name": "Miss Scarlett",
-            "starting_position": "bottom left"
+            "starting_position": "bottom left",
+            "color": "red"
         },
         {
             "id": "green",
             "name": "Reverend Green",
-            "starting_position": "top right"
+            "starting_position": "top right",
+            "color": "green"
         },
         {
             "id": "mustard",
             "name": "Colonel Mustard",
-            "starting_position": "bottom middle left"
+            "starting_position": "bottom middle left",
+            "color": "yellow"
         },
         {
             "id": "plum",
             "name": "Professor Plum",
-            "starting_position": "bottom midle right"
+            "starting_position": "bottom midle right",
+            "color": "purple"
         },
         {
             "id": "peacock",
             "name": "Mrs. Peacock",
-            "starting_position": "top middle right"
+            "starting_position": "top middle right",
+            "color": "blue"
         },
         {
             "id": "white",
             "name": "Mrs. White",
-            "starting_position": "top left"
+            "starting_position": "top left",
+            "color": "white"
         }
     ],
     "weapons": [

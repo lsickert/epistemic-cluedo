@@ -36,7 +36,7 @@ def _create_relations(worlds: list[World], num_players: int) -> dict:
     relations = {}
 
     for p in range(1,num_players+1):
-        p_relations = {}
+        p_relations = set()
 
         for i in range(0,n_worlds):
             for j in range(0,n_worlds):

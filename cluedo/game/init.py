@@ -2,7 +2,7 @@
 from typing import Tuple
 
 import random
-import helper
+import cluedo.game.helper as helper
 import copy
 import itertools
 
@@ -24,7 +24,7 @@ def create_resource_sets(num_characters: int = 6, num_weapons: int = 6, num_room
     return characters, weapons, rooms
 
 
-def create_card_deck(character_list: list, weapon_list: list, room_list: list) -> Tuple(tuple, list):
+def create_card_deck(character_list: list, weapon_list: list, room_list: list) -> Tuple[tuple, list]:
     """
     create the deck of playing cards.
 
@@ -37,7 +37,7 @@ def create_card_deck(character_list: list, weapon_list: list, room_list: list) -
     rooms = copy.deepcopy(room_list)
 
     goal_deck = characters.pop(), weapons.pop(), rooms.pop()
-    clue_deck = characters.extend(weapons.extend(rooms))
+    clue_deck = characters + weapons + rooms
 
     random.shuffle(clue_deck)
 
@@ -48,7 +48,7 @@ def get_card_combinations(characters: list, weapons: list, rooms: list) -> list:
     """return the number of card combinations that are possible in a game"""
 
     comb_list = itertools.product(characters, weapons, rooms)
-    return comb_list
+    return list(comb_list)
 
 
 def _get_id_list(l: list) -> list:

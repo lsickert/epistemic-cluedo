@@ -2,6 +2,7 @@
 from typing import Tuple
 import random
 import json
+import os
 
 _game_resources = None
 
@@ -11,7 +12,7 @@ def throw_single_dice() -> int:
     return random.randint(1, 6)
 
 
-def throw_double_dice() -> Tuple(int, int):
+def throw_double_dice() -> Tuple[int, int]:
     """Adds two random numbers from 1-6 together to simulate a throw with two dices."""
     d1 = throw_single_dice()
     d2 = throw_single_dice()
@@ -22,8 +23,8 @@ def throw_double_dice() -> Tuple(int, int):
 def _load_resources() -> None:
     """loads the game resource specifications"""
     global _game_resources
-    with open("../resources/resources.json", encoding="utf8") as f:
-        _game_resources = json.loads(f)
+    with open(os.path.join(os.path.dirname(__file__), "../resources/resources.json"), encoding="utf8") as f:
+        _game_resources = json.load(f)
 
 
 def get_resources() -> dict:

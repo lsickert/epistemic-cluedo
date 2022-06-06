@@ -2,14 +2,14 @@
 from mlsolver.kripke import KripkeStructure, World
 
 
-def create_kripke_model(possible_worlds: list, num_players: int):
+def create_kripke_model(possible_worlds: list, num_players: int) -> KripkeStructure:
     worlds = _create_worlds(possible_worlds)
     relations = _create_relations(worlds, num_players)
 
     model = KripkeStructure(worlds, relations)
     return model
 
-def _create_worlds(possible_worlds: list):
+def _create_worlds(possible_worlds: list) -> list:
 
     worlds = []
     world_index = 1

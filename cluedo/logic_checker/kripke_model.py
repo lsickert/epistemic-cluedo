@@ -1,16 +1,34 @@
 """This module handles all functions related to creating, updating and validating the Kripke model underlying the game"""
+import copy
 from mlsolver.kripke import KripkeStructure, World
 
 
 def create_kripke_model(possible_worlds: list, num_players: int) -> KripkeStructure:
+    """
+    creates a new Kripke model from a list of possible worlds and a number of players.
+    An S5-model is created, meaning that reflexive, transitive and symmetric relations are added for all worlds.
+    """
     worlds = _create_worlds(possible_worlds)
     relations = _create_relations(worlds, num_players)
 
     model = KripkeStructure(worlds, relations)
     return model
 
-def _create_worlds(possible_worlds: list) -> list:
+def update_kripke_model(old_model: KripkeStructure, formula) -> KripkeStructure:
+    """
+    Update a kripke model so that it satisfies a given formula.
+    Simpler rewrite of mlsolver.kripke.solve because of issues with that formula creating a power set of worlds (OOM error)
+    """
+    new_model = KripkeStructure(old_model.worlds.copy(), copy.deepcopy(old_model.relations))
+    inconsistent_nodes = old_model.nodes_not_follow_formula(formula)
 
+    for node in inconsistent_nodes:
+        new_model.remove_node_by_name(node)
+
+    return new_model
+
+def _create_worlds(possible_worlds: list) -> list:
+    """create a list of worlds from a combination of possible worlds with certain assignments"""
     worlds = []
     world_index = 1
 
@@ -30,7 +48,7 @@ def _create_worlds(possible_worlds: list) -> list:
     return worlds
 
 def _create_relations(worlds: list[World], num_players: int) -> dict:
-
+    """Create reflexive, transitive and symmetric relations for a list of worlds."""
     n_worlds = len(worlds)
 
     relations = {}

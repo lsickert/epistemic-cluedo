@@ -47,7 +47,7 @@ def _create_worlds(possible_worlds: list) -> list:
 
     return worlds
 
-def _create_relations(worlds: list[World], num_players: int) -> dict:
+def _create_relations(worlds: list, num_players: int) -> dict:
     """Create reflexive, transitive and symmetric relations for a list of worlds."""
     n_worlds = len(worlds)
 

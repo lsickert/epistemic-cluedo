@@ -2,7 +2,7 @@
 
 import cluedo.game.init as init
 import cluedo.logic_checker.kripke_model as kripke
-import cluedo.logic_checker.formulas as formulas
+import cluedo.game.player as player_class
 
 def start_game(num_players: int = 6, num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9):
 
@@ -14,9 +14,17 @@ def start_game(num_players: int = 6, num_characters: int = 6, num_weapons: int =
 
     base_model = kripke.create_kripke_model(possible_worlds, num_players)
 
-    # just for testing, this should return a model where only the goal world is present
-    formula = formulas.character_weapon_room_and(goal_deck[0], goal_deck[1], goal_deck[2])
+    players = {}
 
-    new_model = kripke.update_kripke_model(base_model,formula)
+    hand_cards = _split_hand_cards(num_players, clue_deck)
+
+    for player in range(num_players):
+        players[str(player+1)] = player_class.Player((player+1), hand_cards[player], base_model)
 
     print("done")
+
+
+def _split_hand_cards(num_players: int, clue_deck: list) -> list:
+    c = len(clue_deck) // num_players
+    r = len(clue_deck) % num_players
+    return [clue_deck[p * c + min(p,r):(p+1) * c + min(p+1,r)] for p in range(num_players)]

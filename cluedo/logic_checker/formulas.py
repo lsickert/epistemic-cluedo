@@ -1,4 +1,4 @@
-"""This module contains functions to create the individual formulas used in the game"""
+"""This module contains functions to create the individual formulas used in the game."""
 
 from mlsolver.formula import *
 

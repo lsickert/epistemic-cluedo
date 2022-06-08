@@ -25,7 +25,7 @@ class Player:
     def make_suggestion(self):
         """Random suggestion based of own model"""
 
-        random_world_id = random.randint(1, len(self.goal_model.worlds))
+        random_world_id = random.randint(0, len(self.goal_model.worlds)-1)
 
         suggestion = []  
         for prop in self.goal_model.worlds[random_world_id].assignment:

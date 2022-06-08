@@ -44,7 +44,7 @@ def game_run(player_list):
             if opponent > len(player_list):
                 opponent = opponent - len(player_list)
 
-            print("hand cards " + str(opponent))
+            print("hand cards player " + str(opponent))
             print(player_list[str(opponent)].hand_cards)
             
             i += 1

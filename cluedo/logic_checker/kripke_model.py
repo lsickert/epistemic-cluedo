@@ -44,7 +44,7 @@ def _create_worlds(possible_worlds: list) -> list:
 
         worlds.append(new_world)
         world_index += 1
-
+        
     return worlds
 
 def _create_relations(worlds: list, num_players: int) -> dict:

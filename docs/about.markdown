@@ -4,15 +4,12 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+This website is part of a group project for the Logical Aspects of Multi-Agent Systems MSc course 2022 by the [University of Groningen](https://www.rug.nl/).
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+This project has been developed by
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+[Matthew Melcherts](https://github.com/MatthewBMelcherts)
 
+[Ludwig Sickert](https://github.com/lsickert)
 
-[jekyll-organization]: https://github.com/jekyll
+[Thijs Visee](https://github.com/ThijsVisee)

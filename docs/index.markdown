@@ -1,7 +1,7 @@
 ---
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-
 layout: home
-title: Epistemic Cluedo
 ---
+
+## The Project
+
+The game of Cluedo modeled using epistemic logic. This project is part of the MSc course Logical Aspects of Multi-Agent Systems by the University of Groningen (2022).

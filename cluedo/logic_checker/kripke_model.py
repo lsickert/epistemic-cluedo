@@ -14,6 +14,7 @@ def create_multi_kripke_model(possible_worlds: list, num_players: int) -> Kripke
     model = KripkeStructure(worlds, relations)
     return model
 
+
 def create_single_kripke_model(possible_worlds: list) -> KripkeStructure:
     """
     creates a new Kripke model from a list of possible worlds.
@@ -31,13 +32,15 @@ def update_kripke_model(old_model: KripkeStructure, formula) -> KripkeStructure:
     Update a kripke model so that it satisfies a given formula.
     Simpler rewrite of mlsolver.kripke.solve because of issues with that formula creating a power set of worlds (OOM error)
     """
-    new_model = KripkeStructure(old_model.worlds.copy(), copy.deepcopy(old_model.relations))
+    new_model = KripkeStructure(
+        old_model.worlds.copy(), copy.deepcopy(old_model.relations))
     inconsistent_nodes = old_model.nodes_not_follow_formula(formula)
 
     for node in inconsistent_nodes:
         new_model.remove_node_by_name(node)
 
     return new_model
+
 
 def _create_worlds(possible_worlds: list) -> list:
     """create a list of worlds from a combination of possible worlds with certain assignments"""
@@ -59,17 +62,18 @@ def _create_worlds(possible_worlds: list) -> list:
 
     return worlds
 
+
 def _create_multi_relations(worlds: list, num_players: int) -> dict:
     """Create reflexive, transitive and symmetric relations for for multiple agents for a list of worlds."""
     n_worlds = len(worlds)
 
     relations = {}
 
-    for p in range(1,num_players+1):
+    for p in range(1, num_players+1):
         p_relations = set()
 
-        for i in range(0,n_worlds):
-            for j in range(0,n_worlds):
+        for i in range(0, n_worlds):
+            for j in range(0, n_worlds):
                 relation = (worlds[i].name, worlds[j].name)
 
                 p_relations.add(relation)
@@ -78,16 +82,17 @@ def _create_multi_relations(worlds: list, num_players: int) -> dict:
 
     return relations
 
+
 def _create_single_relations(worlds: list) -> set:
     """Create reflexive, transitive and symmetric relations for a list of worlds."""
     n_worlds = len(worlds)
 
     relations = set()
 
-    for i in range(0,n_worlds):
-        for j in range(0,n_worlds):
+    for i in range(0, n_worlds):
+        for j in range(0, n_worlds):
             relation = (worlds[i].name, worlds[j].name)
 
             relations.add(relation)
-    
+
     return relations

@@ -23,8 +23,6 @@ class Player:
 
         self._update_model_with_hand_cards()
 
-
-
     def make_suggestion(self):
         """Random suggestion based of own model"""
         if self.controllable:
@@ -52,12 +50,29 @@ class Player:
         else:
             return possible_matches
 
+    def check_winning_possibility(self):
+        """checks if the player has a possibility of winning the game, meaining that there is only one world left in his goal model"""
+
+        num_possible_worlds = len(self.goal_model.worlds)
+
+        if num_possible_worlds == 1:
+            accusation = []
+            for prop in self.goal_model.worlds[0].assignment:
+                accusation.append(prop)
+            return accusation
+        else:
+            return []
+
     def build_hand_cards_model(self, player_id: str, num_hand_cards: int, possible_cards: list):
 
         combinations = itertools.combinations(possible_cards, num_hand_cards)
 
         self.hand_card_models[str(player_id)] = kripke.create_single_kripke_model(
             combinations)
+
+    def update_goal_model(self, formula):
+
+        self.goal_model = kripke.update_kripke_model(self.goal_model, formula)
 
     def _update_model_with_hand_cards(self):
 
@@ -67,7 +82,6 @@ class Player:
             self.goal_model = kripke.update_kripke_model(
                 self.goal_model, formula)
 
-    
     def _user_control(self):
         possibilities = []
         for x in self.goal_model.worlds:
@@ -84,7 +98,6 @@ class Player:
         suggestion.append(self.__prompt(rooms, "room"))
         return suggestion
 
-    
     def __prompt(self, options, type):
         SPACE_IN_BETWEEN = 15
         string = ""
@@ -94,8 +107,3 @@ class Player:
                 string += " "
         print(string)
         return options[int(input(f"Choose a {type}: "))]
-
-
-
-
-

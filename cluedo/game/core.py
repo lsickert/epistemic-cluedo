@@ -2,11 +2,14 @@
 
 import cluedo.game.init as init
 import cluedo.logic_checker.kripke_model as kripke
+import cluedo.logic_checker.formulas as formulas
 import cluedo.game.player as player_class
 from tqdm import tqdm
 
-def start_game(num_players: int = 6, controllable_players = 1, num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9):
-    pbar = tqdm(desc= "Starting game setup", total=(num_players*2 + num_players*num_players + 5))
+
+def start_game(num_players: int = 6, controllable_players=1, num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9):
+    pbar = tqdm(desc="Starting game setup", total=(
+        num_players*2 + num_players*num_players + 5))
 
     pbar.set_description("Create resources")
     pbar.update(1)
@@ -35,11 +38,13 @@ def start_game(num_players: int = 6, controllable_players = 1, num_characters: i
     for player in range(num_players):
         pbar.set_description(f"Create player {str(player+1)}")
         pbar.update(1)
-        players[str(player+1)] = player_class.Player((player+1), hand_cards[player], base_model, characters, weapons, rooms, player < controllable_players)
+        players[str(player+1)] = player_class.Player((player+1), hand_cards[player],
+                                                     base_model, characters, weapons, rooms, player < controllable_players)
 
     # build the hand card models of the other players for each player
     for player in players.values():
-        pbar.set_description(f"Create hand card knowledge for player {str(player.player_id)}")
+        pbar.set_description(
+            f"Create hand card knowledge for player {str(player.player_id)}")
         pbar.update(1)
         num_hand_cards = len(player.hand_cards)
 
@@ -49,36 +54,66 @@ def start_game(num_players: int = 6, controllable_players = 1, num_characters: i
             remaining_clues.remove(card)
 
         for other_player in players.values():
-            pbar.set_description(f"Create hand card knowledge for player {str(player.player_id)} about player {str(other_player.player_id)}")
+            pbar.set_description(
+                f"Create hand card knowledge for player {str(player.player_id)} about player {str(other_player.player_id)}")
             pbar.update(1)
             if not other_player.player_id == player.player_id:
-                other_player.build_hand_cards_model(player.player_id, num_hand_cards, remaining_clues)
+                other_player.build_hand_cards_model(
+                    player.player_id, num_hand_cards, remaining_clues)
 
     pbar.close()
 
-    print("setup for game is done")
-    game_round(players)
+    print("starting game")
+
+    winner_found = False
+    while not winner_found:
+        winner_found, winner_id, winner_suggestion = game_round(players)
+
+    print(
+        f"player {winner_id} won the game with the suggestion {winner_suggestion}")
+    print(f"goal deck: {goal_deck}")
 
 
 def game_round(player_list):
 
-    for player in player_list:
-        suggestion = player_list[str(player)].make_suggestion()
-        print("player " + player + " suggests:")
+    for player in player_list.values():
+        suggestion = player.make_suggestion()
+        print(f"player {player.player_id} suggests:")
         print(suggestion)
 
         i = 1
         # This loop and if statement make it such that the next opponent is checked for cards,
         while i < len(player_list):
             # rather than 3 checking -> [1-2-4-5-6], we have 3 checking -> [4-5-6-1-2].
-            opponent = int(player) + i
+            opponent = int(player.player_id) + i
             if opponent > len(player_list):
                 opponent = opponent - len(player_list)
 
-            print("matching hand cards player " + str(opponent))
-            print(player_list[str(opponent)].check_hand_cards(suggestion))
+            matching_card = player_list[str(
+                opponent)].check_hand_cards(suggestion)
+            print(
+                f"matching hand cards player  {str(opponent)}: {matching_card}")
+
+            # stop the round if a matching card is found
+            if len(matching_card) > 0:
+                player.update_goal_model(
+                    formulas.not_has_specific_card(matching_card))
+
+                for other_player in player_list.values():
+
+                    if other_player.player_id is not player.player_id:
+                        other_player.update_goal_model(formulas.not_character_weapon_room_and(
+                            suggestion[0], suggestion[1], suggestion[2]))
+                break
 
             i += 1
+
+        accusation = player.check_winning_possibility()
+
+        if len(accusation) > 0:
+            return True, player.player_id, suggestion
+
+    return False, None, None
 
 
 def _split_hand_cards(num_players: int, clue_deck: list) -> list:

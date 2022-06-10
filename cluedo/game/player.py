@@ -1,8 +1,6 @@
 """contains the player class"""
 import copy
-from numpy import character
 
-from sympy import false
 import cluedo.logic_checker.formulas as formulas
 import cluedo.logic_checker.kripke_model as kripke
 import random

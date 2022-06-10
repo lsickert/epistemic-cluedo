@@ -1,5 +1,8 @@
 """contains the player class"""
 import copy
+from numpy import character
+
+from sympy import false
 import cluedo.logic_checker.formulas as formulas
 import cluedo.logic_checker.kripke_model as kripke
 import random
@@ -9,19 +12,25 @@ import itertools
 class Player:
     """all functions and properties of an individual player"""
 
-    def __init__(self, player_id: int, hand_cards: list, base_model, all_characters: list, all_weapons: list, all_rooms: list) -> None:
+    def __init__(self, player_id: int, hand_cards: list, base_model, all_characters: list, all_weapons: list, all_rooms: list, controllable: bool = True) -> None:
         self.player_id = player_id
         self.hand_cards = hand_cards
+        print(f"Player {player_id} has the following cards: {hand_cards}")
         self.goal_model = copy.deepcopy(base_model)
         self.all_characters = all_characters
         self.all_weapons = all_weapons
         self.all_rooms = all_rooms
         self.hand_card_models = {}
+        self.controllable = controllable
 
         self._update_model_with_hand_cards()
 
+
+
     def make_suggestion(self):
         """Random suggestion based of own model"""
+        if self.controllable:
+            return self._user_control()
 
         random_world_id = random.randint(0, len(self.goal_model.worlds)-1)
 
@@ -59,3 +68,36 @@ class Player:
 
             self.goal_model = kripke.update_kripke_model(
                 self.goal_model, formula)
+
+    
+    def _user_control(self):
+        possibilities = []
+        for x in self.goal_model.worlds:
+            for y in x.assignment:
+                if y not in possibilities:
+                    possibilities.append(y)
+
+        suggestion = []
+        characters = [x for x in possibilities if x in self.all_characters]
+        suggestion.append(self.__prompt(characters, "character"))
+        weapons = [x for x in possibilities if x in self.all_weapons]
+        suggestion.append(self.__prompt(weapons, "weapon"))
+        rooms = [x for x in possibilities if x in self.all_rooms]
+        suggestion.append(self.__prompt(rooms, "room"))
+        return suggestion
+
+    
+    def __prompt(self, options, type):
+        SPACE_IN_BETWEEN = 15
+        string = ""
+        for idx, option in enumerate(options):
+            string += f"{idx}: {option}"
+            for _ in range(SPACE_IN_BETWEEN - len(string) % SPACE_IN_BETWEEN):
+                string += " "
+        print(string)
+        return options[int(input(f"Choose a {type}: "))]
+
+
+
+
+

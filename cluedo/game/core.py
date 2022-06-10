@@ -5,7 +5,7 @@ import cluedo.logic_checker.kripke_model as kripke
 import cluedo.game.player as player_class
 from tqdm import tqdm
 
-def start_game(num_players: int = 6, num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9):
+def start_game(num_players: int = 6, controllable_players = 1, num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9):
     pbar = tqdm(desc= "Starting game setup", total=(num_players*2 + num_players*num_players + 5))
 
     pbar.set_description("Create resources")
@@ -35,7 +35,7 @@ def start_game(num_players: int = 6, num_characters: int = 6, num_weapons: int =
     for player in range(num_players):
         pbar.set_description(f"Create player {str(player+1)}")
         pbar.update(1)
-        players[str(player+1)] = player_class.Player((player+1), hand_cards[player], base_model, characters, weapons, rooms)
+        players[str(player+1)] = player_class.Player((player+1), hand_cards[player], base_model, characters, weapons, rooms, player < controllable_players)
 
     # build the hand card models of the other players for each player
     for player in players.values():
@@ -82,7 +82,6 @@ def game_round(player_list):
 
 
 def _split_hand_cards(num_players: int, clue_deck: list) -> list:
-
     c = len(clue_deck) // num_players
     r = len(clue_deck) % num_players
     return [clue_deck[p * c + min(p, r):(p+1) * c + min(p+1, r)] for p in range(num_players)]

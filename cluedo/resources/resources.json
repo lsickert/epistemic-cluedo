@@ -61,6 +61,22 @@
         {
             "id": "wrench",
             "name": "Wrench"
+        },
+        {
+            "id": "poison",
+            "name": "Poison"
+        },
+        {
+            "id": "trophy",
+            "name": "Trophy"
+        },
+        {
+            "id": "axe",
+            "name": "Axe"
+        },
+        {
+            "id": "club",
+            "name": "Club"
         }
     ],
     "rooms": [

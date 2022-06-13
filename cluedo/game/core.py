@@ -96,22 +96,41 @@ def game_round(player_list):
 
             # stop the round if a matching card is found
             if len(matching_card) > 0:
+                # the suggesting player knows the specific card his opponent has
                 player.update_goal_model(
                     formulas.not_has_specific_card(matching_card))
 
+                player.update_hand_cards_model(
+                    str(opponent), formulas.has_specific_card(matching_card))
+
+                # every other player knows that the opponent has at least one of the three cards in his hand
                 for other_player in player_list.values():
 
                     if other_player.player_id is not player.player_id:
                         other_player.update_goal_model(formulas.not_character_weapon_room_and(
                             suggestion[0], suggestion[1], suggestion[2]))
+
+                        if other_player.player_id is not opponent:
+                            other_player.update_hand_cards_model(str(opponent), formulas.character_weapon_room_or(
+                                suggestion[0], suggestion[1], suggestion[2]))
                 break
+            else:
+                # every player knows that this player does not have any of the three cards in his hand
+                for inner_player in player_list.values():
+
+                    if inner_player.player_id is not opponent:
+                        inner_player.update_hand_cards_model(str(opponent), formulas.not_character_weapon_room_and(
+                            suggestion[0], suggestion[1], suggestion[2]))
 
             i += 1
+        else:
+            # none of the other players has any of the cards of the suggestion, so we can safely assume that this sugggestion is correct
+            return True, player.player_id, suggestion
 
         accusation = player.check_winning_possibility()
 
         if len(accusation) > 0:
-            return True, player.player_id, suggestion
+            return True, player.player_id, accusation
 
     return False, None, None
 

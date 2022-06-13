@@ -70,6 +70,11 @@ class Player:
         self.hand_card_models[str(player_id)] = kripke.create_single_kripke_model(
             combinations)
 
+    def update_hand_cards_model(self, player_id: str, formula):
+
+        self.hand_card_models[str(player_id)] = kripke.update_kripke_model(
+            self.hand_card_models[str(player_id)], formula)
+
     def update_goal_model(self, formula):
 
         self.goal_model = kripke.update_kripke_model(self.goal_model, formula)
@@ -98,12 +103,12 @@ class Player:
         suggestion.append(self.__prompt(rooms, "room"))
         return suggestion
 
-    def __prompt(self, options, type):
-        SPACE_IN_BETWEEN = 15
+    def __prompt(self, options, card_type):
+        space_in_between = 15
         string = ""
         for idx, option in enumerate(options):
             string += f"{idx}: {option}"
-            for _ in range(SPACE_IN_BETWEEN - len(string) % SPACE_IN_BETWEEN):
+            for _ in range(space_in_between - len(string) % space_in_between):
                 string += " "
         print(string)
-        return options[int(input(f"Choose a {type}: "))]
+        return options[int(input(f"Choose a {card_type}: "))]

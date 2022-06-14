@@ -48,7 +48,7 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
         pbar.update(1)
         num_hand_cards = len(player.hand_cards)
 
-        remaining_clues = clue_deck.copy()
+        remaining_clues = clue_deck.copy() + list(goal_deck)
 
         for card in player.hand_cards:
             remaining_clues.remove(card)
@@ -58,8 +58,8 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
                 f"Create hand card knowledge for player {str(player.player_id)} about player {str(other_player.player_id)}")
             pbar.update(1)
             if not other_player.player_id == player.player_id:
-                other_player.build_hand_cards_model(
-                    player.player_id, num_hand_cards, remaining_clues)
+                player.build_hand_cards_model(
+                    other_player.player_id, num_hand_cards, remaining_clues)
 
     pbar.close()
 

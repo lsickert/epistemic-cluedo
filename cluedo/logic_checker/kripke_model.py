@@ -37,7 +37,7 @@ def update_kripke_model(old_model: KripkeStructure, formula) -> KripkeStructure:
     inconsistent_nodes = old_model.nodes_not_follow_formula(formula)
 
     for node in inconsistent_nodes:
-        new_model.remove_node_by_name(node)
+        _remove_node_by_name(new_model, node)
 
     return new_model
 
@@ -96,3 +96,35 @@ def _create_single_relations(worlds: list) -> set:
             relations.add(relation)
 
     return relations
+
+
+def _nodes_follow_formula(model: KripkeStructure, formula) -> list:
+    """Returns a list with all worlds of a Kripke structure, where the formula is satisfiable"""
+
+    nodes_follow_formula = []
+
+    for node in model.worlds:
+        if formula.semantics(model, node.name):
+            nodes_follow_formula.append(node.name)
+
+    return nodes_follow_formula
+
+def _remove_node_by_name(model, node_name):
+    """Removes ONE node from a  Kripke model.
+    Rewrite of mlsolver.kripke.remove_node_by_name to (slightly) improve performance
+    """
+    for world in model.worlds.copy():
+        if node_name == world.name:
+            model.worlds.remove(world)
+            break
+
+    if isinstance(model.relations, set):
+        for (start_node, end_node) in model.relations.copy():
+            if start_node == node_name or end_node == node_name:
+                model.relations.remove((start_node, end_node))
+
+    if isinstance(model.relations, dict):
+        for key, value in model.relations.items():
+            for (start_node, end_node) in value.copy():
+                if start_node == node_name or end_node == node_name:
+                    value.remove((start_node, end_node))

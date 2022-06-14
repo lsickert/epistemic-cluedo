@@ -4,7 +4,7 @@ The game of Cluedo modeled in epistemic logic. This project is part of the cours
 
 ## Installation
 
-> IMPORTANT: This project needs a python version of at least 3.7 to run properly. It is also recommended to install the dependencies in a virtual environment
+> IMPORTANT: This project needs a python version of at least 3.9 to run properly. It is also recommended to install the dependencies in a virtual environment
 
 Before starting the game, install the required packages:
 

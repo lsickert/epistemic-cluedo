@@ -1,4 +1,7 @@
 
+# Project Specifics
+*.prof
+
 # Created by https://www.toptal.com/developers/gitignore/api/python,venv,visualstudiocode,pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,venv,visualstudiocode,pycharm
 

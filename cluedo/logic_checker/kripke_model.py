@@ -41,6 +41,40 @@ def update_kripke_model(old_model: KripkeStructure, formula) -> KripkeStructure:
 
     return new_model
 
+def remove_agent_relation(model: KripkeStructure, agent: str, world_1: str, world_2: str, symmetric: bool = False):
+    """
+    Removes a single relation from a Kripke model. If the `symmetric` argument is supplied, the relation will be removed in both directions.
+    """
+    if isinstance(model.relations, dict):
+        raise TypeError("The provided kripke model should contain multiple agents")
+
+    if(symmetric):
+        model.relations[str(agent)].discard((world_1, world_2))
+        model.relations[str(agent)].discard((world_2, world_1))
+    else:
+        model.relations[str(agent)].discard((world_1, world_2))
+    
+
+def remove_relation(model: KripkeStructure, world_1: str, world_2: str, symmetric: bool = False):
+    """
+    Removes a single relation from a Kripke model. If a multi-agent model is supplied, the relation is removed for all agents. 
+    If the `symmetric` argument is supplied, the relation will be removed in both directions.
+    """
+    if isinstance(model.relations, set):
+        if(symmetric):
+            model.relations.discard((world_1, world_2))
+            model.relations.discard((world_2, world_1))
+        else:
+            model.relations.discard((world_1, world_2))
+
+    if isinstance(model.relations, dict):
+        for agent in model.relations.values():
+            if(symmetric):
+                agent.discard((world_1, world_2))
+                agent.discard((world_2, world_1))
+            else:
+                agent.discard((world_1, world_2))
+
 
 def _create_worlds(possible_worlds: list) -> list:
     """create a list of worlds from a combination of possible worlds with certain assignments"""
@@ -119,12 +153,16 @@ def _remove_node_by_name(model, node_name):
             break
 
     if isinstance(model.relations, set):
+        new_relations = set()
         for (start_node, end_node) in model.relations.copy():
-            if start_node == node_name or end_node == node_name:
-                model.relations.remove((start_node, end_node))
+            if not (start_node == node_name or end_node == node_name):
+                new_relations.add((start_node, end_node))
+        model.relations = new_relations
 
     if isinstance(model.relations, dict):
         for key, value in model.relations.items():
+            new_relations = set()
             for (start_node, end_node) in value.copy():
-                if start_node == node_name or end_node == node_name:
-                    value.remove((start_node, end_node))
+                if not (start_node == node_name or end_node == node_name):
+                    new_relations.add((start_node, end_node))
+            model.relations[key] = new_relations

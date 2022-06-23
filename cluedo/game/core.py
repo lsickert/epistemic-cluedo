@@ -77,7 +77,7 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
 def game_round(player_list):
 
     for player in player_list.values():
-        suggestion = player.make_suggestion(random_sugg = False)
+        suggestion = player.make_suggestion(random_sugg=False)
         print(f"player {player.player_id} suggests:")
         print(suggestion)
 
@@ -126,7 +126,7 @@ def game_round(player_list):
         else:
             # none of the other players has any of the cards of the suggestion, so we can safely assume that this sugggestion is correct
             return True, player.player_id, suggestion
-        
+
         # check if we can exclude any additional cards from the goal model since it is known by deduction that another player has them on their hand
         player.check_other_hand_cards()
 

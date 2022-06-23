@@ -28,12 +28,14 @@ def not_has_specific_card(card: str):
     """Formula to check that a player does not have a specific card"""
     return Not(Atom(card))
 
+
 def knows_has_specific_card(card: str):
     """Formula to check if a player knows about having a specific cards"""
     return Box(Atom(card))
 
+
 def knows_not_has_specific_card(card: str):
-    """Formula to check if a player knows about having a specific cards"""
+    """Formula to check if a player knows about not having a specific cards"""
     return Box(Not(Atom(card)))
 
 # def not_character_weapon_room_or(character: str, weapon: str, room: str):

@@ -77,7 +77,7 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
 def game_round(player_list):
 
     for player in player_list.values():
-        suggestion = player.make_suggestion()
+        suggestion = player.make_suggestion(random_sugg = False)
         print(f"player {player.player_id} suggests:")
         print(suggestion)
 

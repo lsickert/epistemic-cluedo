@@ -1,6 +1,5 @@
 """contains the player class"""
 import copy
-
 import cluedo.logic_checker.formulas as formulas
 import cluedo.logic_checker.kripke_model as kripke
 import random
@@ -23,16 +22,40 @@ class Player:
 
         self._update_model_with_hand_cards()
 
-    def make_suggestion(self):
-        """Random suggestion based of own model"""
+    def make_suggestion(self, random_sugg=True):
+        """
+        Make a suggestion based of own model.
+        If the `random` parameter is set to true, a random suggestion will be returned, otherwise the properties with the highest information gain are returned.
+        """
         if self.controllable:
             return self._user_control()
 
-        random_world_id = random.randint(0, len(self.goal_model.worlds)-1)
+        if random_sugg:
+            random_world_id = random.randint(0, len(self.goal_model.worlds)-1)
 
-        suggestion = []
-        for prop in self.goal_model.worlds[random_world_id].assignment:
-            suggestion.append(prop)
+            suggestion = []
+            for prop in self.goal_model.worlds[random_world_id].assignment:
+                suggestion.append(prop)
+
+        else:
+            characters = []
+            weapons = []
+            rooms = []
+            for world in self.goal_model.worlds:
+                for idx, prop in enumerate(world.assignment):
+                    if idx == 0:
+                        characters.append(prop)
+
+                    if idx == 1:
+                        weapons.append(prop)
+
+                    if idx == 2:
+                        rooms.append(prop)
+
+            suggestion = []
+            suggestion.append(max(characters, key=characters.count))
+            suggestion.append(max(weapons, key=weapons.count))
+            suggestion.append(max(rooms, key=rooms.count))
 
         return suggestion
 

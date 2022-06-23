@@ -90,7 +90,7 @@ def game_round(player_list):
                 opponent = opponent - len(player_list)
 
             matching_card = player_list[str(
-                opponent)].check_hand_cards(suggestion)
+                opponent)].check_own_hand_cards(suggestion)
             print(
                 f"matching hand cards player  {str(opponent)}: {matching_card}")
 
@@ -126,6 +126,9 @@ def game_round(player_list):
         else:
             # none of the other players has any of the cards of the suggestion, so we can safely assume that this sugggestion is correct
             return True, player.player_id, suggestion
+        
+        # check if we can exclude any additional cards from the goal model since it is known by deduction that another player has them on their hand
+        player.check_other_hand_cards()
 
         accusation = player.check_winning_possibility()
 

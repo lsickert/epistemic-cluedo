@@ -12,7 +12,6 @@ class Player:
     def __init__(self, player_id: int, hand_cards: list, base_model, all_characters: list, all_weapons: list, all_rooms: list, controllable: bool = True) -> None:
         self.player_id = player_id
         self.hand_cards = hand_cards
-        print(f"Player {player_id} has the following cards: {hand_cards}")
         self.goal_model = copy.deepcopy(base_model)
         self.all_characters = all_characters
         self.all_weapons = all_weapons
@@ -21,6 +20,8 @@ class Player:
         self.controllable = controllable
 
         self._update_model_with_hand_cards()
+
+        print(f"Player {player_id} has the following cards: {hand_cards}")
 
     def make_suggestion(self, random_sugg=True):
         """
@@ -59,7 +60,7 @@ class Player:
 
         return suggestion
 
-    def check_hand_cards(self, suggestion):
+    def check_own_hand_cards(self, suggestion):
         """checks if the player has one of the suggested cards in his own hand cards"""
         temp_sugg = set(suggestion)
         possible_matches = [
@@ -72,6 +73,24 @@ class Player:
 
         else:
             return possible_matches
+
+    def check_other_hand_cards(self):
+        """Check the hand card models of all other players if it is known that they have a specific card and update the own goal model to exclude that card"""
+
+        possible_values = set()
+
+        for world in self.goal_model.worlds:
+            for prop in world.assignment:
+                possible_values.add(prop)
+
+        for model in self.hand_card_models.values():
+            for prop in possible_values:
+                # we only need to check the first world since all worlds are connected in a S5 model
+                knows_hand_card = formulas.knows_has_specific_card(
+                    prop).semantic(model, model.worlds[0].name)
+
+                if knows_hand_card:
+                    self.update_goal_model(formulas.not_has_specific_card(prop))
 
     def check_winning_possibility(self):
         """checks if the player has a possibility of winning the game, meaining that there is only one world left in his goal model"""

@@ -63,7 +63,7 @@ def remove_agent_relations(model: KripkeStructure, agent: str, world_1: str = No
             if not start_node == world_1:
                 new_relations.add((start_node, end_node))
 
-        new_relations.add(world_1, world_1)
+        new_relations.add((world_1, world_1))
         model.relations[str(agent)] = new_relations
 
     if world_1 is None and not symmetric:
@@ -72,7 +72,7 @@ def remove_agent_relations(model: KripkeStructure, agent: str, world_1: str = No
             if not end_node == world_2:
                 new_relations.add((start_node, end_node))
 
-        new_relations.add(world_2, world_2)
+        new_relations.add((world_2, world_2))
         model.relations[str(agent)] = new_relations
 
     if world_1 is None or world_2 is None:
@@ -83,7 +83,7 @@ def remove_agent_relations(model: KripkeStructure, agent: str, world_1: str = No
             if not (start_node == remove_world or end_node == remove_world):
                 new_relations.add((start_node, end_node))
 
-        new_relations.add(remove_world, remove_world)
+        new_relations.add((remove_world, remove_world))
         model.relations[str(agent)] = new_relations
 
     if isinstance(model.relations, set):
@@ -116,7 +116,7 @@ def remove_relations(model: KripkeStructure, world_1: str = None, world_2: str =
                 if not start_node == world_1:
                     new_relations.add((start_node, end_node))
 
-            new_relations.add(world_1, world_1)
+            new_relations.add((world_1, world_1))
             model.relations = new_relations
 
         if isinstance(model.relations, dict):
@@ -126,7 +126,7 @@ def remove_relations(model: KripkeStructure, world_1: str = None, world_2: str =
                     if not start_node == world_1:
                         new_relations.add((start_node, end_node))
 
-                new_relations.add(world_1, world_1)
+                new_relations.add((world_1, world_1))
                 model.relations[key] = new_relations
 
         return
@@ -139,7 +139,7 @@ def remove_relations(model: KripkeStructure, world_1: str = None, world_2: str =
                 if not end_node == world_2:
                     new_relations.add((start_node, end_node))
 
-            new_relations.add(world_2, world_2)
+            new_relations.add((world_2, world_2))
             model.relations = new_relations
 
         if isinstance(model.relations, dict):
@@ -149,7 +149,7 @@ def remove_relations(model: KripkeStructure, world_1: str = None, world_2: str =
                     if not end_node == world_2:
                         new_relations.add((start_node, end_node))
 
-                new_relations.add(world_2, world_2)
+                new_relations.add((world_2, world_2))
                 model.relations[key] = new_relations
 
         return
@@ -163,7 +163,7 @@ def remove_relations(model: KripkeStructure, world_1: str = None, world_2: str =
                 if not (start_node == remove_world or end_node == remove_world):
                     new_relations.add((start_node, end_node))
 
-            new_relations.add(remove_world, remove_world)
+            new_relations.add((remove_world, remove_world))
             model.relations = new_relations
 
         if isinstance(model.relations, dict):
@@ -173,7 +173,7 @@ def remove_relations(model: KripkeStructure, world_1: str = None, world_2: str =
                     if not (start_node == remove_world or end_node == remove_world):
                         new_relations.add((start_node, end_node))
 
-                new_relations.add(remove_world, remove_world)
+                new_relations.add((remove_world, remove_world))
                 model.relations[key] = new_relations
 
         return

@@ -17,6 +17,7 @@ class Player:
         self.all_weapons = all_weapons
         self.all_rooms = all_rooms
         self.hand_card_models = {}
+        self.own_hand_card_model = None
         self.controllable = controllable
 
         self._update_model_with_hand_cards()
@@ -60,14 +61,24 @@ class Player:
 
         return suggestion
 
-    def check_own_hand_cards(self, suggestion):
-        """checks if the player has one of the suggested cards in his own hand cards"""
+    def check_own_hand_cards(self, suggestion, opponent: str, use_knowledge: bool = False):
+        """checks if the player has one of the suggested cards in his own hand cards
+        If the parameter `use_knowledge` is set, the player will try to return a card the other agent already knows
+        """
         temp_sugg = set(suggestion)
         possible_matches = [
             card for card in self.hand_cards if card in temp_sugg]
 
         if len(possible_matches) > 0:
             random.shuffle(possible_matches)
+
+            if len(possible_matches) > 1 and use_knowledge:
+                for match in possible_matches:
+                    if formulas.agent_knows_has_specific_card(match, opponent).semantic(self.own_hand_card_model, "w1"):
+                        # we do not need to update model, since the opponent will not gain any new knowledge here
+                        return match
+
+            self.update_own_hand_cards_model(possible_matches[0], opponent)
 
             return possible_matches[0]
 
@@ -107,11 +118,25 @@ class Player:
             return []
 
     def build_hand_cards_model(self, player_id: str, num_hand_cards: int, possible_cards: list):
-
+        """Build a model for the knowledge about the hand cards of another player"""
         combinations = itertools.combinations(possible_cards, num_hand_cards)
 
         self.hand_card_models[str(player_id)] = kripke.create_single_kripke_model(
             combinations)
+
+    def build_own_hand_cards_model(self, num_players: int):
+        """Build a model for the knowledge about knowledge of other players about your hand cards"""
+        # add full handcard knowledge and no handcard knowledge
+        combinations = [tuple(self.hand_cards), tuple()]
+
+        # add remaining card knowledge
+        if len(self.hand_cards) > 1:
+            for i in range(1, len(self.hand_cards)):
+
+                combinations.extend(itertools.combinations(self.hand_cards, i))
+
+        self.own_hand_card_model = kripke.create_multi_kripke_model(
+            combinations, num_players, exclude_players=[int(self.player_id)])
 
     def update_hand_cards_model(self, player_id: str, formula):
 
@@ -121,6 +146,15 @@ class Player:
     def update_goal_model(self, formula):
 
         self.goal_model = kripke.update_kripke_model(self.goal_model, formula)
+
+    def update_own_hand_cards_model(self, match: str, opponent: str):
+
+        remove_match_nodes = self.own_hand_card_model.nodes_not_follow_formula(
+            formulas.has_specific_card(match))
+
+        for node in remove_match_nodes:
+            kripke.remove_agent_relations(
+                self.own_hand_card_model, opponent, world_2=node, symmetric=True)
 
     def _update_model_with_hand_cards(self):
 

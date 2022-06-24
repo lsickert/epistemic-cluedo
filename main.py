@@ -41,7 +41,7 @@ if __name__ == "__main__":
         num_rooms = int(input(f"Please choose at most {max_rooms} rooms! "))
 
     winner_found, winner_id, winner_suggestion, goal_deck, game_turn = game.start_game(num_players, controllable_players,
-                    num_characters, num_weapons, num_rooms)
+                                                                                       num_characters, num_weapons, num_rooms)
 
     print(
         f"player {winner_id} won the game with the suggestion {winner_suggestion} in round {game_turn}")

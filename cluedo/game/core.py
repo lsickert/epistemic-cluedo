@@ -46,6 +46,9 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
         pbar.set_description(
             f"Create hand card knowledge for player {str(player.player_id)}")
         pbar.update(1)
+
+        player.build_own_hand_cards_model(num_players)
+
         num_hand_cards = len(player.hand_cards)
 
         remaining_clues = clue_deck.copy() + list(goal_deck)
@@ -90,7 +93,7 @@ def game_round(player_list):
                 opponent = opponent - len(player_list)
 
             matching_card = player_list[str(
-                opponent)].check_own_hand_cards(suggestion)
+                opponent)].check_own_hand_cards(suggestion, str(player.player_id), True)
             print(
                 f"matching hand cards player  {str(opponent)}: {matching_card}")
 

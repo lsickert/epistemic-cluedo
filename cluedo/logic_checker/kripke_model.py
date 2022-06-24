@@ -1,5 +1,6 @@
 """This module handles all functions related to creating, updating and validating the Kripke model underlying the game"""
 import copy
+import itertools
 from mlsolver.kripke import KripkeStructure, World
 
 def create_multi_kripke_model(possible_worlds: list, num_players: int) -> KripkeStructure:
@@ -98,18 +99,13 @@ def _create_worlds(possible_worlds: list) -> list:
 
 def _create_multi_relations(worlds: list, num_players: int) -> dict:
     """Create reflexive, transitive and symmetric relations for for multiple agents for a list of worlds."""
-    n_worlds = len(worlds)
+    world_names = [world.name for world in worlds]
 
     relations = {}
 
     for p in range(1, num_players+1):
-        p_relations = set()
 
-        for i in range(0, n_worlds):
-            for j in range(0, n_worlds):
-                relation = (worlds[i].name, worlds[j].name)
-
-                p_relations.add(relation)
+        p_relations = set(itertools.product(world_names,repeat=2))
 
         relations[str(p)] = p_relations
 
@@ -118,15 +114,9 @@ def _create_multi_relations(worlds: list, num_players: int) -> dict:
 
 def _create_single_relations(worlds: list) -> set:
     """Create reflexive, transitive and symmetric relations for a list of worlds."""
-    n_worlds = len(worlds)
+    world_names = [world.name for world in worlds]
 
-    relations = set()
-
-    for i in range(0, n_worlds):
-        for j in range(0, n_worlds):
-            relation = (worlds[i].name, worlds[j].name)
-
-            relations.add(relation)
+    relations = set(itertools.product(world_names,repeat=2))
 
     return relations
 

@@ -167,14 +167,13 @@ def _remove_node_by_name(model, node_name):
             model.relations[key] = new_relations
 
 def _remove_nodes_by_name(model, nodes):
-    """Removes multiple nodes from a  Kripke model. 
+    """Removes multiple nodes from a  Kripke model.
     This makes the function a lot faster than removing single nodes.
     """
     node_set = set(nodes)
     for world in model.worlds.copy():
         if world.name in node_set:
             model.worlds.remove(world)
-            break
 
     if isinstance(model.relations, set):
         new_relations = set()

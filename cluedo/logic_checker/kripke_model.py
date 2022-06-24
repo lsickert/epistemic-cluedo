@@ -2,7 +2,6 @@
 import copy
 from mlsolver.kripke import KripkeStructure, World
 
-
 def create_multi_kripke_model(possible_worlds: list, num_players: int) -> KripkeStructure:
     """
     creates a new Kripke model from a list of possible worlds and a number of players.
@@ -26,7 +25,6 @@ def create_single_kripke_model(possible_worlds: list) -> KripkeStructure:
     model = KripkeStructure(worlds, relations)
     return model
 
-
 def update_kripke_model(old_model: KripkeStructure, formula) -> KripkeStructure:
     """
     Update a kripke model so that it satisfies a given formula.
@@ -36,8 +34,7 @@ def update_kripke_model(old_model: KripkeStructure, formula) -> KripkeStructure:
         old_model.worlds.copy(), copy.deepcopy(old_model.relations))
     inconsistent_nodes = old_model.nodes_not_follow_formula(formula)
 
-    for node in inconsistent_nodes:
-        _remove_node_by_name(new_model, node)
+    _remove_nodes_by_name(new_model, inconsistent_nodes)
 
     return new_model
 
@@ -145,7 +142,6 @@ def _nodes_follow_formula(model: KripkeStructure, formula) -> list:
 
     return nodes_follow_formula
 
-
 def _remove_node_by_name(model, node_name):
     """Removes ONE node from a  Kripke model.
     Rewrite of mlsolver.kripke.remove_node_by_name to (slightly) improve performance
@@ -157,7 +153,7 @@ def _remove_node_by_name(model, node_name):
 
     if isinstance(model.relations, set):
         new_relations = set()
-        for (start_node, end_node) in model.relations.copy():
+        for (start_node, end_node) in list(model.relations.copy()):
             if not (start_node == node_name or end_node == node_name):
                 new_relations.add((start_node, end_node))
         model.relations = new_relations
@@ -165,7 +161,33 @@ def _remove_node_by_name(model, node_name):
     if isinstance(model.relations, dict):
         for key, value in model.relations.items():
             new_relations = set()
-            for (start_node, end_node) in value.copy():
+            for (start_node, end_node) in list(value.copy()):
                 if not (start_node == node_name or end_node == node_name):
                     new_relations.add((start_node, end_node))
             model.relations[key] = new_relations
+
+def _remove_nodes_by_name(model, nodes):
+    """Removes multiple nodes from a  Kripke model. 
+    This makes the function a lot faster than removing single nodes.
+    """
+    node_set = set(nodes)
+    for world in model.worlds.copy():
+        if world.name in node_set:
+            model.worlds.remove(world)
+            break
+
+    if isinstance(model.relations, set):
+        new_relations = set()
+        for (start_node, end_node) in model.relations.copy():
+            if not ((start_node in node_set) or (end_node in node_set)):
+                new_relations.add((start_node, end_node))
+        model.relations = new_relations
+
+    if isinstance(model.relations, dict):
+        for key, value in model.relations.items():
+            new_relations = set()
+            for (start_node, end_node) in value.copy():
+                if not ((start_node in node_set) or (end_node in node_set)):
+                    new_relations.add((start_node, end_node))
+            model.relations[key] = new_relations
+

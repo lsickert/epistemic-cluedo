@@ -1,5 +1,7 @@
 """This module contains various helper functions that are used throughout the rest of the game modules."""
 from typing import Tuple
+from functools import wraps
+from time import time
 import random
 import json
 import os
@@ -59,3 +61,16 @@ def get_rooms() -> list:
         _load_resources()
 
     return _game_resources["rooms"]
+
+
+# since the list comprehensions in the model updates can take a long time this function can be used as a decorator to measure performance of different implementations
+def timing(f):
+    """timing decorator taken from https://stackoverflow.com/questions/1622943/timeit-versus-timing-decorator"""
+    @wraps(f)
+    def wrap(*args, **kw):
+        ts = time()
+        result = f(*args, **kw)
+        te = time()
+        print (f'func:{f.__name__} took: {te-ts} sec')
+        return result
+    return wrap

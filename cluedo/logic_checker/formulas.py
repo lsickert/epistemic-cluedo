@@ -1,6 +1,5 @@
 """This module contains functions to create the individual formulas used in the game."""
 
-from lib2to3.pgen2.token import AT
 from mlsolver.formula import *
 
 

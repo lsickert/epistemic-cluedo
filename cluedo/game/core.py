@@ -71,9 +71,7 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
         winner_found, winner_id, winner_suggestion = game_round(players)
         game_turn += 1
 
-    print(
-        f"player {winner_id} won the game with the suggestion {winner_suggestion} in round {game_turn}")
-    print(f"goal deck: {goal_deck}")
+    return winner_found, winner_id, winner_suggestion, goal_deck, game_turn
 
 
 def game_round(player_list):

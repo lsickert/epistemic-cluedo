@@ -66,11 +66,13 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
     print("starting game")
 
     winner_found = False
+    game_turn = 1
     while not winner_found:
         winner_found, winner_id, winner_suggestion = game_round(players)
+        game_turn += 1
 
     print(
-        f"player {winner_id} won the game with the suggestion {winner_suggestion}")
+        f"player {winner_id} won the game with the suggestion {winner_suggestion} in round {game_turn}")
     print(f"goal deck: {goal_deck}")
 
 

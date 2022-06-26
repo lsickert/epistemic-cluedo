@@ -9,7 +9,7 @@ import itertools
 class Player:
     """all functions and properties of an individual player"""
 
-    def __init__(self, player_id: int, hand_cards: list, base_model, all_characters: list, all_weapons: list, all_rooms: list, controllable: bool = True) -> None:
+    def __init__(self, player_id: int, hand_cards: list, base_model, all_characters: list, all_weapons: list, all_rooms: list, higher_order: int, controllable: bool = True) -> None:
         self.player_id = player_id
         self.hand_cards = hand_cards
         self.goal_model = copy.deepcopy(base_model)
@@ -19,12 +19,13 @@ class Player:
         self.hand_card_models = {}
         self.own_hand_card_model = None
         self.controllable = controllable
+        self.higher_order = higher_order
 
         self._update_model_with_hand_cards()
 
         print(f"Player {player_id} has the following cards: {hand_cards}")
 
-    def make_suggestion(self, random_sugg=True):
+    def make_suggestion(self, random_sugg: bool = None):
         """
         Make a suggestion based of own model.
         If the `random` parameter is set to true, a random suggestion will be returned, otherwise the properties with the highest information gain are returned.
@@ -32,14 +33,7 @@ class Player:
         if self.controllable:
             return self._user_control()
 
-        if random_sugg:
-            random_world_id = random.randint(0, len(self.goal_model.worlds)-1)
-
-            suggestion = []
-            for prop in self.goal_model.worlds[random_world_id].assignment:
-                suggestion.append(prop)
-
-        else:
+        if self.higher_order > 0 and not random_sugg:
             characters = []
             weapons = []
             rooms = []
@@ -59,9 +53,16 @@ class Player:
             suggestion.append(max(weapons, key=weapons.count))
             suggestion.append(max(rooms, key=rooms.count))
 
+        else:
+            random_world_id = random.randint(0, len(self.goal_model.worlds)-1)
+
+            suggestion = []
+            for prop in self.goal_model.worlds[random_world_id].assignment:
+                suggestion.append(prop)
+
         return suggestion
 
-    def check_own_hand_cards(self, suggestion, opponent: str, use_knowledge: bool = False):
+    def check_own_hand_cards(self, suggestion, opponent: str, use_knowledge: bool = None):
         """checks if the player has one of the suggested cards in his own hand cards
         If the parameter `use_knowledge` is set, the player will try to return a card the other agent already knows
         """
@@ -72,7 +73,7 @@ class Player:
         if len(possible_matches) > 0:
             random.shuffle(possible_matches)
 
-            if len(possible_matches) > 1 and use_knowledge:
+            if len(possible_matches) > 1 and (self.higher_order > 1 or use_knowledge):
                 for match in possible_matches:
                     if formulas.agent_knows_has_specific_card(match, opponent).semantic(self.own_hand_card_model, "w1"):
                         # we do not need to update model, since the opponent will not gain any new knowledge here
@@ -88,21 +89,22 @@ class Player:
     def check_other_hand_cards(self):
         """Check the hand card models of all other players if it is known that they have a specific card and update the own goal model to exclude that card"""
 
-        possible_values = set()
+        if self.higher_order > 0:
+            possible_values = set()
 
-        for world in self.goal_model.worlds:
-            for prop in world.assignment:
-                possible_values.add(prop)
+            for world in self.goal_model.worlds:
+                for prop in world.assignment:
+                    possible_values.add(prop)
 
-        for model in self.hand_card_models.values():
-            for prop in possible_values:
-                # we only need to check the first world since all worlds are connected in a S5 model
-                knows_hand_card = formulas.knows_has_specific_card(
-                    prop).semantic(model, model.worlds[0].name)
+            for model in self.hand_card_models.values():
+                for prop in possible_values:
+                    # we only need to check the first world since all worlds are connected in a S5 model
+                    knows_hand_card = formulas.knows_has_specific_card(
+                        prop).semantic(model, model.worlds[0].name)
 
-                if knows_hand_card:
-                    self.update_goal_model(
-                        formulas.not_has_specific_card(prop))
+                    if knows_hand_card:
+                        self.update_goal_model(
+                            formulas.not_has_specific_card(prop))
 
     def check_winning_possibility(self):
         """checks if the player has a possibility of winning the game, meaining that there is only one world left in his goal model"""

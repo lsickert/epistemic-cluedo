@@ -39,7 +39,7 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
         pbar.set_description(f"Create player {str(player+1)}")
         pbar.update(1)
         players[str(player+1)] = player_class.Player((player+1), hand_cards[player],
-                                                     base_model, characters, weapons, rooms, player < controllable_players)
+                                                     base_model, characters, weapons, rooms,2, player < controllable_players,)
 
     # build the hand card models of the other players for each player
     for player in players.values():
@@ -80,7 +80,7 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
 def game_round(player_list):
 
     for player in player_list.values():
-        suggestion = player.make_suggestion(random_sugg=False)
+        suggestion = player.make_suggestion()
         print(f"player {player.player_id} suggests:")
         print(suggestion)
 
@@ -93,7 +93,7 @@ def game_round(player_list):
                 opponent = opponent - len(player_list)
 
             matching_card = player_list[str(
-                opponent)].check_own_hand_cards(suggestion, str(player.player_id), True)
+                opponent)].check_own_hand_cards(suggestion, str(player.player_id))
             print(
                 f"matching hand cards player  {str(opponent)}: {matching_card}")
 

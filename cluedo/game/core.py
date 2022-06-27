@@ -5,6 +5,7 @@ import cluedo.logic_checker.kripke_model as kripke
 import cluedo.logic_checker.formulas as formulas
 import cluedo.game.player as player_class
 from tqdm import tqdm
+import random
 
 
 def start_game(num_players: int = 6, controllable_players=1, num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9):
@@ -34,12 +35,16 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
     pbar.update(1)
     hand_cards = _split_hand_cards(num_players, clue_deck)
 
+    list_of_colors = ["red", "green", "yellow", "purple", "blue", "white"]
+
     # initialize players
     for player in range(num_players):
         pbar.set_description(f"Create player {str(player+1)}")
         pbar.update(1)
+        color = random.choice(list_of_colors)   # Assign a color to each player, important for game rules and starting positions
+        list_of_colors.remove(color)            # Remove color from list, such that each player has an unique color.
         players[str(player+1)] = player_class.Player((player+1), hand_cards[player],
-                                                     base_model, characters, weapons, rooms,2, player < controllable_players,)
+                                                     base_model, characters, weapons, rooms, 2, color, player < controllable_players,)
 
     # build the hand card models of the other players for each player
     for player in players.values():

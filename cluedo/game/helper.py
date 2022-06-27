@@ -74,3 +74,40 @@ def timing(f):
         print (f'func:{f.__name__} took: {te-ts} sec')
         return result
     return wrap
+
+def get_possible_rooms(location, color):
+    """
+    Returns possible rooms where the players could move, this includes adjacent rooms and rooms accessible with secret passages.
+    Also returns the rooms for the starting positions when the game starts.
+    """
+    if location == None:    # Starting positions
+        if color == 'red':
+            possible_rooms = ['hall', 'lounge']
+        if color == 'green':
+            possible_rooms = ['ballroom', 'conservatory']
+        if color == 'yellow':
+            possible_rooms = ['dining', 'lounge']
+        if color == 'purple':
+            possible_rooms = ['study', 'library']
+        if color == 'blue':
+            possible_rooms = ['conservatory', 'billiard']
+        if color == 'white':
+            possible_rooms = ['ballroom', 'kitchen']
+    
+    else:                   # Movement possibilities of rooms, adjacent and secret passages
+        rooms_with_accesability_to = {
+            'kitchen': ['ballroom', 'dining', 'study'],
+            'ballroom': ['kitchen', 'conservatory'],
+            'conservatory': ['ballroom', 'billiard', 'lounge'],
+            'dining': ['kitchen', 'lounge'],
+            'billiard': ['conservatory', 'library'],
+            'library': ['billiard', 'study'],
+            'lounge': ['dining', 'hall', 'conservatory'],
+            'hall': ['study', 'lounge'],
+            'study': ['hall', 'library', 'kitchen'],
+            'pathways': ['kitchen', 'ballroom', 'conservatory', 'dining', 'billiard', 'library', 'lounge', 'hall', 'study']
+        }
+
+        possible_rooms = rooms_with_accesability_to[str(location)]
+
+    return possible_rooms

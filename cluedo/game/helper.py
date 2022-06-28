@@ -81,30 +81,30 @@ def get_possible_rooms(location, color):
     Also returns the rooms for the starting positions when the game starts.
     """
     if location == None:    # Starting positions
-        if color == 'red':
+        if color == 'scarlett':
             possible_rooms = ['hall', 'lounge']
         if color == 'green':
             possible_rooms = ['ballroom', 'conservatory']
-        if color == 'yellow':
+        if color == 'mustard':
             possible_rooms = ['dining', 'lounge']
-        if color == 'purple':
+        if color == 'plum':
             possible_rooms = ['study', 'library']
-        if color == 'blue':
+        if color == 'peacock':
             possible_rooms = ['conservatory', 'billiard']
         if color == 'white':
             possible_rooms = ['ballroom', 'kitchen']
     
-    else:                   # Movement possibilities of rooms, adjacent and secret passages
+    else:                   # Movement possibilities of rooms, adjacent, secret passages and self.
         rooms_with_accesability_to = {
-            'kitchen': ['ballroom', 'dining', 'study'],
-            'ballroom': ['kitchen', 'conservatory'],
-            'conservatory': ['ballroom', 'billiard', 'lounge'],
-            'dining': ['kitchen', 'lounge'],
-            'billiard': ['conservatory', 'library'],
-            'library': ['billiard', 'study'],
-            'lounge': ['dining', 'hall', 'conservatory'],
-            'hall': ['study', 'lounge'],
-            'study': ['hall', 'library', 'kitchen'],
+            'kitchen': ['ballroom', 'dining', 'study', 'kitchen'],
+            'ballroom': ['kitchen', 'conservatory', 'ballroom'],
+            'conservatory': ['ballroom', 'billiard', 'lounge', 'conservatory'],
+            'dining': ['kitchen', 'lounge', 'dining'],
+            'billiard': ['conservatory', 'library', 'billiard'],
+            'library': ['billiard', 'study', 'library'],
+            'lounge': ['dining', 'hall', 'conservatory', 'lounge'],
+            'hall': ['study', 'lounge', 'hall'],
+            'study': ['hall', 'library', 'kitchen', 'study'],
             'pathways': ['kitchen', 'ballroom', 'conservatory', 'dining', 'billiard', 'library', 'lounge', 'hall', 'study']
         }
 

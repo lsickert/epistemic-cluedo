@@ -37,7 +37,7 @@ class Player:
 
             options_for_move = []
             if self.higher_order > 0 and not random_sugg:  
-                for world in self.goal.model.worlds:                    # Create list of rooms in goal model worlds
+                for world in self.goal_model.worlds:                    # Create list of rooms in goal model worlds
                     options_for_move.append(list(world.assignment)[2])
 
                 if max(options_for_move, key=options_for_move.count) in possible_rooms: # If highest information gain from list
@@ -46,7 +46,7 @@ class Player:
                     room = 'pathways'    # Move into the pathways which leads to more rooms.
 
             else:
-                for world in self.goal.model.worlds:                # Using the goal model, create a list with worlds
+                for world in self.goal_model.worlds:                # Using the goal model, create a list with worlds
                     if list(world.assignment)[2] in possible_rooms: # that include a room that is accessible
                         options_for_move.append(world)              # from the player's current location.
 
@@ -57,8 +57,7 @@ class Player:
                     room = list(random_world.assignment)[2]  # Obtain the room from the world.
                 
         self.location = room    # Move to room
-
-        
+        return room
 
     def make_suggestion(self, random_sugg: bool = None):
         """
@@ -89,10 +88,15 @@ class Player:
             suggestion.append(max(rooms, key=rooms.count))
 
         else:
-            random_world_id = random.randint(0, len(self.goal_model.worlds)-1)
+            options = []
+            for world in self.goal_model.worlds:
+                if list(world.assignment)[2] == self.location:
+                    options.append(world)
+
+            random_world = random.choice(options)
 
             suggestion = []
-            for prop in self.goal_model.worlds[random_world_id].assignment:
+            for prop in random_world.assignment:
                 suggestion.append(prop)
 
         return suggestion

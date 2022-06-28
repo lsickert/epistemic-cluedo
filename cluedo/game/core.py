@@ -35,7 +35,7 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
     pbar.update(1)
     hand_cards = _split_hand_cards(num_players, clue_deck)
 
-    list_of_colors = ["red", "green", "yellow", "purple", "blue", "white"]
+    list_of_colors = ["scarlett", "green", "mustard", "plum", "peacock", "white"]
 
     # initialize players
     for player in range(num_players):
@@ -85,9 +85,27 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
 def game_round(player_list):
 
     for player in player_list.values():
+
+        move = player.move()
+        print(f"player {player.player_id} moves to:")
+        print(move)
+
+        if player.location == 'pathways':   # Players can not make a suggestion in the pathways between rooms.
+            continue
+
         suggestion = player.make_suggestion()
         print(f"player {player.player_id} suggests:")
         print(suggestion)
+
+        if move != suggestion[2]:               # If this ever comes up, then there is something that needs to be changed to the 
+            print("illegal suggestion!!!")      # move or suggestion function, it has not happened yet, but until we hand this in
+            return 0                            # this will tell us that this implementation works.
+
+        for character in player_list.values():
+            if character.color == suggestion[0]:
+                move = character.move(room = suggestion[2])
+                print(f"player {character.player_id} is moved to:")
+                print(move)
 
         i = 1
         # This loop and if statement make it such that the next opponent is checked for cards,

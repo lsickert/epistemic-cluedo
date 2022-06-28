@@ -5,6 +5,7 @@ import cluedo.logic_checker.kripke_model as kripke
 import cluedo.logic_checker.formulas as formulas
 import cluedo.game.player as player_class
 from tqdm import tqdm
+import random
 
 
 def start_game(num_players: int = 6, controllable_players=1, num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9):
@@ -34,18 +35,25 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
     pbar.update(1)
     hand_cards = _split_hand_cards(num_players, clue_deck)
 
+    list_of_colors = ["scarlett", "green", "mustard", "plum", "peacock", "white"]
+
     # initialize players
     for player in range(num_players):
         pbar.set_description(f"Create player {str(player+1)}")
         pbar.update(1)
+        color = random.choice(list_of_colors)   # Assign a color to each player, important for game rules and starting positions
+        list_of_colors.remove(color)            # Remove color from list, such that each player has an unique color.
         players[str(player+1)] = player_class.Player((player+1), hand_cards[player],
-                                                     base_model, characters, weapons, rooms, player < controllable_players)
+                                                     base_model, characters, weapons, rooms, 2, color, player < controllable_players,)
 
     # build the hand card models of the other players for each player
     for player in players.values():
         pbar.set_description(
             f"Create hand card knowledge for player {str(player.player_id)}")
         pbar.update(1)
+
+        player.build_own_hand_cards_model(num_players)
+
         num_hand_cards = len(player.hand_cards)
 
         remaining_clues = clue_deck.copy() + list(goal_deck)
@@ -66,20 +74,38 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
     print("starting game")
 
     winner_found = False
+    game_turn = 1
     while not winner_found:
         winner_found, winner_id, winner_suggestion = game_round(players)
+        game_turn += 1
 
-    print(
-        f"player {winner_id} won the game with the suggestion {winner_suggestion}")
-    print(f"goal deck: {goal_deck}")
+    return winner_found, winner_id, winner_suggestion, goal_deck, game_turn
 
 
 def game_round(player_list):
 
     for player in player_list.values():
-        suggestion = player.make_suggestion(random_sugg=False)
+
+        move = player.move()
+        print(f"player {player.player_id} moves to:")
+        print(move)
+
+        if player.location == 'pathways':   # Players can not make a suggestion in the pathways between rooms.
+            continue
+
+        suggestion = player.make_suggestion()
         print(f"player {player.player_id} suggests:")
         print(suggestion)
+
+        if move != suggestion[2]:               # If this ever comes up, then there is something that needs to be changed to the 
+            print("illegal suggestion!!!")      # move or suggestion function, it has not happened yet, but until we hand this in
+            return 0                            # this will tell us that this implementation works.
+
+        for character in player_list.values():
+            if character.color == suggestion[0]:
+                move = character.move(room = suggestion[2])
+                print(f"player {character.player_id} is moved to:")
+                print(move)
 
         i = 1
         # This loop and if statement make it such that the next opponent is checked for cards,
@@ -90,7 +116,7 @@ def game_round(player_list):
                 opponent = opponent - len(player_list)
 
             matching_card = player_list[str(
-                opponent)].check_own_hand_cards(suggestion)
+                opponent)].check_own_hand_cards(suggestion, str(player.player_id))
             print(
                 f"matching hand cards player  {str(opponent)}: {matching_card}")
 

@@ -15,3 +15,5 @@ pip install -r requirements.txt
 ## Starting the game
 
 To start the game run `python main.py` from the root folder of the project and follow the prompts in the command line.
+
+It is strongly advised to follow the default settings when running the game for the first time, as larger configurations can quickly make the game run very slow due to state explosion in the internal Kripke models. In general you can expect the game to speed up as the number of turns progresses due to the increased knowledge of the players, which means that less possible worlds need to be checked.

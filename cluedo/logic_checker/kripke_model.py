@@ -1,15 +1,20 @@
 """This module handles all functions related to creating, updating and validating the Kripke model underlying the game"""
 import copy
+import itertools
 from mlsolver.kripke import KripkeStructure, World
 
 
-def create_multi_kripke_model(possible_worlds: list, num_players: int) -> KripkeStructure:
+def create_multi_kripke_model(possible_worlds: list, num_players: int, exclude_players: list = None) -> KripkeStructure:
     """
     creates a new Kripke model from a list of possible worlds and a number of players.
     An S5-model is created, meaning that reflexive, transitive and symmetric relations are added for all worlds.
+    If the `exclude_players` parameter includes any valid player_ids bigger than 0, relations for those players will not be created
     """
+    if exclude_players is None:
+        exclude_players = []
+
     worlds = _create_worlds(possible_worlds)
-    relations = _create_multi_relations(worlds, num_players)
+    relations = _create_multi_relations(worlds, num_players, exclude_players)
 
     model = KripkeStructure(worlds, relations)
     return model
@@ -36,17 +41,52 @@ def update_kripke_model(old_model: KripkeStructure, formula) -> KripkeStructure:
         old_model.worlds.copy(), copy.deepcopy(old_model.relations))
     inconsistent_nodes = old_model.nodes_not_follow_formula(formula)
 
-    for node in inconsistent_nodes:
-        _remove_node_by_name(new_model, node)
+    _remove_nodes_by_name(new_model, inconsistent_nodes)
 
     return new_model
 
 
-def remove_agent_relation(model: KripkeStructure, agent: str, world_1: str, world_2: str, symmetric: bool = False):
+def remove_agent_relations(model: KripkeStructure, agent: str, world_1: str = None, world_2: str = None, symmetric: bool = False):
     """
-    Removes a single relation from a Kripke model. If the `symmetric` argument is supplied, the relation will be removed in both directions.
+    Removes relations from a Kripke model. If the `symmetric` argument is supplied, the relation will be removed in both directions.
+    If only one of the `world_1` or `world_2` arguments is supplied, all relations starting or ending with this world will be removed (except reflexive relations).
+    In combination with the `symmetric` argument this will effectively separate this world from all other worlds for one agent
     """
-    if isinstance(model.relations, dict):
+
+    if world_1 is None and world_2 is None:
+        raise TypeError(
+            "Either `world_1` or `world_2` need to be set")
+
+    if world_2 is None and not symmetric:
+        new_relations = set()
+        for (start_node, end_node) in list(model.relations[str(agent)].copy()):
+            if not start_node == world_1:
+                new_relations.add((start_node, end_node))
+
+        new_relations.add((world_1, world_1))
+        model.relations[str(agent)] = new_relations
+
+    if world_1 is None and not symmetric:
+        new_relations = set()
+        for (start_node, end_node) in list(model.relations[str(agent)].copy()):
+            if not end_node == world_2:
+                new_relations.add((start_node, end_node))
+
+        new_relations.add((world_2, world_2))
+        model.relations[str(agent)] = new_relations
+
+    if world_1 is None or world_2 is None:
+        remove_world = world_1 if world_2 is None else world_2
+
+        new_relations = set()
+        for (start_node, end_node) in list(model.relations[str(agent)].copy()):
+            if not (start_node == remove_world or end_node == remove_world):
+                new_relations.add((start_node, end_node))
+
+        new_relations.add((remove_world, remove_world))
+        model.relations[str(agent)] = new_relations
+
+    if isinstance(model.relations, set):
         raise TypeError(
             "The provided kripke model should contain multiple agents")
 
@@ -55,11 +95,87 @@ def remove_agent_relation(model: KripkeStructure, agent: str, world_1: str, worl
         model.relations[str(agent)].discard((world_2, world_1))
 
 
-def remove_relation(model: KripkeStructure, world_1: str, world_2: str, symmetric: bool = False):
+def remove_relations(model: KripkeStructure, world_1: str = None, world_2: str = None, symmetric: bool = False):
     """
-    Removes a single relation from a Kripke model. If a multi-agent model is supplied, the relation is removed for all agents.
+    Removes relations from a Kripke model. If a multi-agent model is supplied, the relation is removed for all agents.
     If the `symmetric` argument is supplied, the relation will be removed in both directions.
+    If only one of the `world_1` or `world_2` arguments is supplied, all relations starting or ending with this world will be removed (except reflexive relations).
+    In combination with the `symmetric` argument this will effectively separate this world from all other worlds
     """
+    if world_1 is None and world_2 is None:
+        raise TypeError(
+            "Either `world_1` or `world_2` need to be set")
+
+    if world_2 is None and not symmetric:
+
+        if isinstance(model.relations, set):
+            new_relations = set()
+            for (start_node, end_node) in list(model.relations.copy()):
+                if not start_node == world_1:
+                    new_relations.add((start_node, end_node))
+
+            new_relations.add((world_1, world_1))
+            model.relations = new_relations
+
+        if isinstance(model.relations, dict):
+            for key, value in model.relations.items():
+                new_relations = set()
+                for (start_node, end_node) in list(value.copy()):
+                    if not start_node == world_1:
+                        new_relations.add((start_node, end_node))
+
+                new_relations.add((world_1, world_1))
+                model.relations[key] = new_relations
+
+        return
+
+    if world_1 is None and not symmetric:
+
+        if isinstance(model.relations, set):
+            new_relations = set()
+            for (start_node, end_node) in list(model.relations.copy()):
+                if not end_node == world_2:
+                    new_relations.add((start_node, end_node))
+
+            new_relations.add((world_2, world_2))
+            model.relations = new_relations
+
+        if isinstance(model.relations, dict):
+            for key, value in model.relations.items():
+                new_relations = set()
+                for (start_node, end_node) in list(value.copy()):
+                    if not end_node == world_2:
+                        new_relations.add((start_node, end_node))
+
+                new_relations.add((world_2, world_2))
+                model.relations[key] = new_relations
+
+        return
+
+    if world_1 is None or world_2 is None:
+        remove_world = world_1 if world_2 is None else world_2
+
+        if isinstance(model.relations, set):
+            new_relations = set()
+            for (start_node, end_node) in list(model.relations.copy()):
+                if not (start_node == remove_world or end_node == remove_world):
+                    new_relations.add((start_node, end_node))
+
+            new_relations.add((remove_world, remove_world))
+            model.relations = new_relations
+
+        if isinstance(model.relations, dict):
+            for key, value in model.relations.items():
+                new_relations = set()
+                for (start_node, end_node) in list(value.copy()):
+                    if not (start_node == remove_world or end_node == remove_world):
+                        new_relations.add((start_node, end_node))
+
+                new_relations.add((remove_world, remove_world))
+                model.relations[key] = new_relations
+
+        return
+
     if isinstance(model.relations, set):
         model.relations.discard((world_1, world_2))
         if symmetric:
@@ -93,20 +209,18 @@ def _create_worlds(possible_worlds: list) -> list:
     return worlds
 
 
-def _create_multi_relations(worlds: list, num_players: int) -> dict:
+def _create_multi_relations(worlds: list, num_players: int, exclude_players: list) -> dict:
     """Create reflexive, transitive and symmetric relations for for multiple agents for a list of worlds."""
-    n_worlds = len(worlds)
+    world_names = [world.name for world in worlds]
 
     relations = {}
 
     for p in range(1, num_players+1):
-        p_relations = set()
 
-        for i in range(0, n_worlds):
-            for j in range(0, n_worlds):
-                relation = (worlds[i].name, worlds[j].name)
+        if p in exclude_players:
+            continue
 
-                p_relations.add(relation)
+        p_relations = set(itertools.product(world_names, repeat=2))
 
         relations[str(p)] = p_relations
 
@@ -115,15 +229,9 @@ def _create_multi_relations(worlds: list, num_players: int) -> dict:
 
 def _create_single_relations(worlds: list) -> set:
     """Create reflexive, transitive and symmetric relations for a list of worlds."""
-    n_worlds = len(worlds)
+    world_names = [world.name for world in worlds]
 
-    relations = set()
-
-    for i in range(0, n_worlds):
-        for j in range(0, n_worlds):
-            relation = (worlds[i].name, worlds[j].name)
-
-            relations.add(relation)
+    relations = set(itertools.product(world_names, repeat=2))
 
     return relations
 
@@ -151,7 +259,7 @@ def _remove_node_by_name(model, node_name):
 
     if isinstance(model.relations, set):
         new_relations = set()
-        for (start_node, end_node) in model.relations.copy():
+        for (start_node, end_node) in list(model.relations.copy()):
             if not (start_node == node_name or end_node == node_name):
                 new_relations.add((start_node, end_node))
         model.relations = new_relations
@@ -159,7 +267,32 @@ def _remove_node_by_name(model, node_name):
     if isinstance(model.relations, dict):
         for key, value in model.relations.items():
             new_relations = set()
-            for (start_node, end_node) in value.copy():
+            for (start_node, end_node) in list(value.copy()):
                 if not (start_node == node_name or end_node == node_name):
+                    new_relations.add((start_node, end_node))
+            model.relations[key] = new_relations
+
+
+def _remove_nodes_by_name(model, nodes):
+    """Removes multiple nodes from a  Kripke model.
+    This makes the function a lot faster than removing single nodes.
+    """
+    node_set = set(nodes)
+    for world in model.worlds.copy():
+        if world.name in node_set:
+            model.worlds.remove(world)
+
+    if isinstance(model.relations, set):
+        new_relations = set()
+        for (start_node, end_node) in model.relations.copy():
+            if not ((start_node in node_set) or (end_node in node_set)):
+                new_relations.add((start_node, end_node))
+        model.relations = new_relations
+
+    if isinstance(model.relations, dict):
+        for key, value in model.relations.items():
+            new_relations = set()
+            for (start_node, end_node) in value.copy():
+                if not ((start_node in node_set) or (end_node in node_set)):
                     new_relations.add((start_node, end_node))
             model.relations[key] = new_relations

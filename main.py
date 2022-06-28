@@ -40,5 +40,9 @@ if __name__ == "__main__":
     while num_rooms > max_rooms:
         num_rooms = int(input(f"Please choose at most {max_rooms} rooms! "))
 
-    game.start_game(num_players, controllable_players,
-                    num_characters, num_weapons, num_rooms)
+    winner_found, winner_id, winner_suggestion, goal_deck, game_turn = game.start_game(num_players, controllable_players,
+                                                                                       num_characters, num_weapons, num_rooms)
+
+    print(
+        f"player {winner_id} won the game with the suggestion {winner_suggestion} in round {game_turn}")
+    print(f"goal deck: {goal_deck}")

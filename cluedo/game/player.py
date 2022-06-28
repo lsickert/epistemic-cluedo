@@ -37,26 +37,27 @@ class Player:
             suggestion = []
             for prop in self.goal_model.worlds[random_world_id].assignment:
                 suggestion.append(prop)
+            
+            return suggestion
 
-        else:
-            characters = []
-            weapons = []
-            rooms = []
-            for world in self.goal_model.worlds:
-                for idx, prop in enumerate(world.assignment):
-                    if idx == 0:
-                        characters.append(prop)
+        characters = []
+        weapons = []
+        rooms = []
+        for world in self.goal_model.worlds:
+            for idx, prop in enumerate(world.assignment):
+                if idx == 0:
+                    characters.append(prop)
 
-                    if idx == 1:
-                        weapons.append(prop)
+                if idx == 1:
+                    weapons.append(prop)
 
-                    if idx == 2:
-                        rooms.append(prop)
+                if idx == 2:
+                    rooms.append(prop)
 
-            suggestion = []
-            suggestion.append(max(characters, key=characters.count))
-            suggestion.append(max(weapons, key=weapons.count))
-            suggestion.append(max(rooms, key=rooms.count))
+        suggestion = []
+        suggestion.append(max(characters, key=characters.count))
+        suggestion.append(max(weapons, key=weapons.count))
+        suggestion.append(max(rooms, key=rooms.count))
 
         return suggestion
 
@@ -71,8 +72,7 @@ class Player:
 
             return possible_matches[0]
 
-        else:
-            return possible_matches
+        return possible_matches
 
     def check_other_hand_cards(self):
         """Check the hand card models of all other players if it is known that they have a specific card and update the own goal model to exclude that card"""
@@ -94,7 +94,7 @@ class Player:
                         formulas.not_has_specific_card(prop))
 
     def check_winning_possibility(self):
-        """checks if the player has a possibility of winning the game, meaining that there is only one world left in his goal model"""
+        """checks if the player has a possibility of winning the game, meaning that there is only one world left in his goal model"""
 
         num_possible_worlds = len(self.goal_model.worlds)
 

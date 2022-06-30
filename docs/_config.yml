@@ -38,6 +38,7 @@ header_pages:
   - results.md
   - conclusion.md
   - about.md
+  - references.md
 
 # Exclude from processing.
 # The following items will not be processed, by default.

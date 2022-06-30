@@ -6,7 +6,7 @@ permalink: /game/
 
 ## Background
 
-Cluedo is a board game for two to six players where the players try to solve a murder case by cleverly combining evidence they obtain through asking questions to the other players.
+[https://products.hasbro.com/en-gb/product/clue-the-classic-mystery-game:10997C67-5056-900B-106C-54F26B4FA30F](Cluedo) is a board game for two to six players where the players try to solve a murder case by cleverly combining evidence they obtain through asking questions to the other players. All informations about the game in the paragraphs below has been taken from \[1\] and \[3\].
 
 ## How to Play
 

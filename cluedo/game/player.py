@@ -123,8 +123,12 @@ class Player:
             for model in self.hand_card_models.values():
                 for prop in possible_values:
                     # we only need to check the first world since all worlds are connected in a S5 model
-                    knows_hand_card = formulas.knows_has_specific_card(
-                        prop).semantic(model, model.worlds[0].name)
+                    try:
+                        knows_hand_card = formulas.knows_has_specific_card(
+                            prop).semantic(model, model.worlds[0].name)
+                    except IndexError:
+                        print(model)
+                        print(model.worlds)
 
                     if knows_hand_card:
                         self.update_goal_model(

@@ -1,6 +1,5 @@
 # Core dependencies
 git+https://github.com/erohkohl/mlsolver.git
-tqdm==4.59.0
 
 # Development only
 pylint

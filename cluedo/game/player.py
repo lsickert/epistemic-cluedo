@@ -126,13 +126,14 @@ class Player:
                     try:
                         knows_hand_card = formulas.knows_has_specific_card(
                             prop).semantic(model, model.worlds[0].name)
+
+                        if knows_hand_card:
+                            self.update_goal_model(
+                                formulas.not_has_specific_card(prop))
                     except IndexError:
                         print(model)
                         print(model.worlds)
 
-                    if knows_hand_card:
-                        self.update_goal_model(
-                            formulas.not_has_specific_card(prop))
 
     def check_winning_possibility(self):
         """checks if the player has a possibility of winning the game, meaning that there is only one world left in his goal model"""

@@ -8,6 +8,7 @@ import random
 
 
 def start_game(num_players: int = 6, controllable_players=1, num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9):
+    print()
     characters, weapons, rooms = init.create_resource_sets(
         num_characters, num_weapons, num_rooms)
 

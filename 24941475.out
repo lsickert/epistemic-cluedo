@@ -1,0 +1,44 @@
+How many players? (default 3, max 6) How many controllable players? (default 1, 0 for automatic game) How many characters? (default 5, max 6) How many weapons? (default 5, max 10) How many rooms? (default 5, max 9) /var/spool/slurmd/job24941475/slurm_script: line 13: 21425 Killed                  python3 main.py < long_game.txt
+slurmstepd: error: Detected 1 oom-kill event(s) in StepId=24941475.batch. Some of your processes may have been killed by the cgroup out-of-memory handler.
+
+
+###############################################################################
+Peregrine Cluster
+Job 24941475 for user 'p300522'
+Finished at: Thu Jun 30 19:07:47 CEST 2022
+
+Job details:
+============
+
+Job ID              : 24941475_1
+Name                : train_model
+User                : p300522
+Partition           : short
+Nodes               : pg-node156
+Number of Nodes     : 1
+Cores               : 1
+Number of Tasks     : 1
+State               : OUT_OF_MEMORY
+Submit              : 2022-06-30T19:02:09
+Start               : 2022-06-30T19:02:10
+End                 : 2022-06-30T19:07:46
+Reserved walltime   : 00:30:00
+Used walltime       : 00:05:36
+Used CPU time       : 00:05:36 (efficiency: 100.01%)
+% User (Computation): 94.59%
+% System (I/O)      :  5.41%
+Mem reserved        : 32000M
+Max Mem (Node/step) : 30.20G (pg-node156, per node)
+Full Max Mem usage  : 30.20G
+Total Disk Read     : 24.97K
+Total Disk Write    : 234.00 
+
+
+Acknowledgements:
+=================
+
+Please see this page for information about acknowledging Peregrine in your publications:
+
+https://wiki.hpc.rug.nl/peregrine/introduction/scientific_output
+
+################################################################################

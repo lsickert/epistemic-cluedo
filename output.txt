@@ -1,0 +1,97 @@
+How many players? (default 3, max 6) How many controllable players? (default 1, 0 for automatic game) How many characters? (default 5, max 6) How many weapons? (default 5, max 10) How many rooms? (default 5, max 9) Player 1 has the following cards: ['candle', 'mustard', 'peacock', 'white']
+Player 2 has the following cards: ['ballroom', 'kitchen', 'plum', 'wrench']
+Player 3 has the following cards: ['pistol', 'study', 'club', 'conservatory']
+starting game
+player 1 moves to: pathways
+player 1 can not make a suggestion in the pathways between rooms.
+player 2 moves to: pathways
+player 2 can not make a suggestion in the pathways between rooms.
+player 3 moves to: pathways
+player 3 can not make a suggestion in the pathways between rooms.
+player 1 moves to: conservatory
+player 1 suggests: ['plum', 'club', 'conservatory']
+player 1 is moved to:
+conservatory
+matching hand cards player  2: plum
+player 2 moves to: conservatory
+player 2 suggests: ['peacock', 'candle', 'conservatory']
+matching hand cards player  3: conservatory
+player 3 moves to: kitchen
+player 3 suggests: ['peacock', 'candle', 'kitchen']
+matching hand cards player  1: peacock
+player 1 moves to: conservatory
+player 1 suggests: ['scarlett', 'club', 'conservatory']
+player 3 is moved to:
+pathways
+matching hand cards player  2: []
+matching hand cards player  3: conservatory
+player 2 moves to: pathways
+player 2 can not make a suggestion in the pathways between rooms.
+player 3 moves to: kitchen
+player 3 suggests: ['white', 'candle', 'kitchen']
+matching hand cards player  1: white
+player 1 moves to: pathways
+player 1 can not make a suggestion in the pathways between rooms.
+player 2 moves to: study
+player 2 suggests: ['peacock', 'candle', 'study']
+matching hand cards player  3: study
+player 3 moves to: kitchen
+player 3 suggests: ['mustard', 'candle', 'kitchen']
+player 2 is moved to:
+kitchen
+matching hand cards player  1: mustard
+player 1 moves to: kitchen
+player 1 suggests: ['scarlett', 'club', 'kitchen']
+player 3 is moved to:
+kitchen
+matching hand cards player  2: kitchen
+player 2 moves to: pathways
+player 2 can not make a suggestion in the pathways between rooms.
+player 3 moves to: kitchen
+player 3 suggests: ['scarlett', 'candle', 'kitchen']
+player 3 is moved to:
+kitchen
+matching hand cards player  1: candle
+player 1 moves to: ballroom
+player 1 suggests: ['scarlett', 'club', 'ballroom']
+player 3 is moved to:
+ballroom
+matching hand cards player  2: ballroom
+player 2 moves to: library
+player 2 suggests: ['peacock', 'candle', 'library']
+matching hand cards player  3: []
+matching hand cards player  1: candle
+player 3 moves to: kitchen
+player 3 suggests: ['scarlett', 'wrench', 'kitchen']
+player 3 is moved to:
+kitchen
+matching hand cards player  1: []
+matching hand cards player  2: kitchen
+player 1 moves to: pathways
+player 1 can not make a suggestion in the pathways between rooms.
+player 2 moves to: library
+player 2 suggests: ['peacock', 'club', 'library']
+matching hand cards player  3: club
+player 3 moves to: ballroom
+player 3 suggests: ['scarlett', 'wrench', 'ballroom']
+player 3 is moved to:
+ballroom
+matching hand cards player  1: []
+matching hand cards player  2: wrench
+player 1 moves to: library
+player 1 suggests: ['scarlett', 'club', 'library']
+player 3 is moved to:
+pathways
+matching hand cards player  2: []
+matching hand cards player  3: club
+player 2 moves to: library
+player 2 suggests: ['peacock', 'pistol', 'library']
+matching hand cards player  3: pistol
+player 3 moves to: ballroom
+player 3 suggests: ['scarlett', 'axe', 'ballroom']
+player 3 is moved to:
+ballroom
+matching hand cards player  1: []
+matching hand cards player  2: ballroom
+player 3 won the game with the suggestion ['scarlett', 'axe', 'library'] in round 9
+goal deck: ('scarlett', 'axe', 'library')

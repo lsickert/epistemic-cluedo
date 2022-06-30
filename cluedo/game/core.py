@@ -88,14 +88,13 @@ def game_round(player_list):
 
         suggestion = player.make_suggestion()
         move = player.move(suggestion)
-        print(f"player {player.player_id} moves to:")
-        print(move)
+        print(f"player {player.player_id} moves to: {move}")
 
         if player.location == 'pathways':   # Players can not make a suggestion in the pathways between rooms.
+            print(f"player {player.player_id} can not make a suggestion in the pathways between rooms.")
             continue
 
-        print(f"player {player.player_id} suggests:")
-        print(suggestion)
+        print(f"player {player.player_id} suggests: {suggestion}")
 
         if move != suggestion[2]:               # If this ever comes up, then there is something that needs to be changed to the 
             print("illegal suggestion!!!")      # move or suggestion function, it has not happened yet, but until we hand this in

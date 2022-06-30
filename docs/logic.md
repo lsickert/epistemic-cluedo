@@ -6,7 +6,11 @@ permalink: /logic/
 
 ## Logical Background
 
-For the epistemic models in this game we will employ the rules of 
+For the epistemic models in this game we will employ the rules of S5-models initially, although later stages of the game might deviate from this, since the individual update steps explained below might delete accessibility relations between different worlds.
+
+We identified three aspects of the game that can be modelled well in epistemic logic. These are the knowledge of the agents about the goal deck, their own handcards, and the other players handcards. As described in the [Game](cluedo.md) section, some limitations apply for these models in order to keep them computationally feasible. Additionally, we are splitting the full game knowledge into three distinct Kripke models to model the three aspects described above separately in order to increase performance further. A fully formalised Kripke model containing all of the game knowledge can be restored from these simpler models by multiplication:
+
+Let us assume as an example the goal model contains the world 
 
 ## Modelling the Goal Deck
 

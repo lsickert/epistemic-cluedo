@@ -42,12 +42,11 @@ Once a player believes that they know the character, the weapon and the room ins
 
 * While a player is allowed to choose any character and weapon in a *suggestion*, they can only suggest the room they are currently in.
 
-
 ### Limitations
 
 Since modelling the full game of Cluedo is quite computationally expensive and would require significant development efforts, there are a number of limitations we will be making for our implementation, which are explained below:
 
-* Players will only make an accusations once they are certain about the contents of the goal deck. While it might be possible to model premature accusations with a certain risk and probability factor, this would be too complex to implement for now. We assume the players within the model are perfect logicians.
+* Players will only make an accusations once they are certain about the contents of the goal deck. While it might be possible to model premature accusations with a certain risk and probability factor, this would be too complex to implement for now. We assume the (automatic) players within the model are perfect logicians.
 
 * Players will correctly remember all suggestions and actions made by other players. With human players it might happen that a player incorrectly notes down or forgets a suggestion another player makes, this would significantly complicate the underlying epistemic logic formulas, which is why we will not model this possibility.
 
@@ -55,4 +54,4 @@ Since modelling the full game of Cluedo is quite computationally expensive and w
 
 * Players will not employ longer-term strategic planning. At each turn a player will choose a suggestion that will bring him the most benefit at the current point of the game. While it is theoretically possible to choose less optimal options that will bring a greater benefit in the future of the game, this would require both strategic reasoning and the heuristic modelling of future possible turns.
 
-* Players will not employ complex pathfinding. Since the main goal of this project is on the logical modelling of players decisions, implementing some form of complex pathfinding algorithm would take up too much effort. Furthermore, dice rolling will not be implemented since it would add a random factor to the modelling of this game. Instead, the players can either stay in the room they are in, move to an adjacent room, use a secret passage, or go into the pathways between rooms to get to a room that is further away in their next turn. 
+* Players will not employ complex pathfinding. Since the main goal of this project is on the logical modelling of players decisions, implementing some form of complex pathfinding algorithm would take up too much effort. Furthermore, dice rolling will not be implemented since it would add a random factor to the modelling of this game. Instead, the players can either stay in the room they are in, move to an adjacent room, use a secret passage, or go into the pathways between rooms to get to a room that is further away in their next turn.

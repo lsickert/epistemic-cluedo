@@ -35,10 +35,11 @@ class Player:
         """
         if room == 'choice':
             possible_rooms = helper.get_possible_rooms(self.location, self.color)
-            return suggestion[2] if suggestion[2] in possible_rooms else 'pathways'
-                
-        self.location = room    # Move to room
-        return room
+            self.location = suggestion[2] if suggestion[2] in possible_rooms else 'pathways'
+        else:
+            self.location = room    # Move to room
+
+        return self.location
 
     def make_suggestion(self, random_sugg: bool = None):
         """

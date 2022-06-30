@@ -103,7 +103,7 @@ def game_round(player_list):
 
         for character in player_list.values():
             if character.color == suggestion[0]:
-                move = character.move(room = suggestion[2])
+                move = character.move(suggestion)
                 print(f"player {character.player_id} is moved to:")
                 print(move)
 

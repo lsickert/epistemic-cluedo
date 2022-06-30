@@ -22,39 +22,20 @@ class Player:
         self.higher_order = higher_order
         self.color = color
         self.location = None
+        self.latest_suggestion = None
 
         self._update_model_with_hand_cards()
 
         print(f"Player {player_id} has the following cards: {hand_cards}")
 
-    def move(self, random_sugg: bool = None, room = 'choice'):
+    def move(self, suggestion, room = 'choice'):
         """
         Move to the specified room, or leave empty for 'choice' to let the player decide based on 'random' parameter.
         If the `random` parameter is set to true, then the player will move to a random room, otherwise move to the room with the highest information gain.
         """
         if room == 'choice':
             possible_rooms = helper.get_possible_rooms(self.location, self.color)
-
-            options_for_move = []
-            if self.higher_order > 0 and not random_sugg:  
-                for world in self.goal_model.worlds:                    # Create list of rooms in goal model worlds
-                    options_for_move.append(list(world.assignment)[2])
-
-                if max(options_for_move, key=options_for_move.count) in possible_rooms: # If highest information gain from list
-                    room = max(options_for_move, key=options_for_move.count)            # is accessible, move to it.
-                else:
-                    room = 'pathways'    # Move into the pathways which leads to more rooms.
-
-            else:
-                for world in self.goal_model.worlds:                # Using the goal model, create a list with worlds
-                    if list(world.assignment)[2] in possible_rooms: # that include a room that is accessible
-                        options_for_move.append(world)              # from the player's current location.
-
-                if bool(options_for_move) == False: # Check for empty list
-                    room = 'pathways'                # Move into the pathways which leads to more rooms.
-                else:
-                    random_world = random.choice(options_for_move)  # Random world from available worlds in created list.
-                    room = list(random_world.assignment)[2]  # Obtain the room from the world.
+            return suggestion[2] if suggestion[2] in possible_rooms else 'pathways'
                 
         self.location = room    # Move to room
         return room
@@ -86,12 +67,13 @@ class Player:
             suggestion.append(max(characters, key=characters.count))
             suggestion.append(max(weapons, key=weapons.count))
             suggestion.append(max(rooms, key=rooms.count))
+            self.latest_suggestion = suggestion
             return suggestion
 
 
         options = []
         for world in self.goal_model.worlds:
-            if list(world.assignment)[2] == self.location:
+            if list(world.assignment)[2] in helper.get_possible_rooms(self.location):
                 options.append(world)
 
         random_world = random.choice(options)
@@ -99,6 +81,8 @@ class Player:
         suggestion = []
         for prop in random_world.assignment:
             suggestion.append(prop)
+        self.latest_suggestion = suggestion
+        return suggestion
 
 
 

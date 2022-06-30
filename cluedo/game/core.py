@@ -86,14 +86,14 @@ def game_round(player_list):
 
     for player in player_list.values():
 
-        move = player.move()
+        suggestion = player.make_suggestion()
+        move = player.move(suggestion)
         print(f"player {player.player_id} moves to:")
         print(move)
 
         if player.location == 'pathways':   # Players can not make a suggestion in the pathways between rooms.
             continue
 
-        suggestion = player.make_suggestion()
         print(f"player {player.player_id} suggests:")
         print(suggestion)
 

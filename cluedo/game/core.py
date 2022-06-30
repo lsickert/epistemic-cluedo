@@ -33,6 +33,7 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
 
     # build the hand card models of the other players for each player
     for player in players.values():
+        print(f"initializing player {player.player_id}")
 
         player.build_own_hand_cards_model(num_players)
 

@@ -53,6 +53,10 @@ def remove_agent_relations(model: KripkeStructure, agent: str, world_1: str = No
     In combination with the `symmetric` argument this will effectively separate this world from all other worlds for one agent
     """
 
+    if isinstance(model.relations, set):
+        raise TypeError(
+            "The provided kripke model should contain multiple agents")
+
     if world_1 is None and world_2 is None:
         raise TypeError(
             "Either `world_1` or `world_2` need to be set")
@@ -85,10 +89,6 @@ def remove_agent_relations(model: KripkeStructure, agent: str, world_1: str = No
 
         new_relations.add((remove_world, remove_world))
         model.relations[str(agent)] = new_relations
-
-    if isinstance(model.relations, set):
-        raise TypeError(
-            "The provided kripke model should contain multiple agents")
 
     model.relations[str(agent)].discard((world_1, world_2))
     if symmetric:

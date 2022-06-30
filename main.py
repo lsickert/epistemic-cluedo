@@ -5,6 +5,7 @@ import cluedo.game.helper as helper
 import sys
 
 if __name__ == "__main__":
+    print(len(sys.argv))
     if len(sys.argv) == 1:
         max_players = len(helper.get_characters())
         max_weapons = len(helper.get_weapons())

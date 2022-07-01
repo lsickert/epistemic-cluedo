@@ -34,12 +34,17 @@ def get_means():
 
             filepath = f".{s}results{s}{folder}{s}{filename}"
             means[folder][filename[0]] = averages_for_file(filepath, folder)
+        
+        for x in ['0', '1', '2']:
+            if x not in means[folder]:
+                means[folder][x] = []
 
-    for k, v in means.items():
-        print(k)
-        print(v)
-        print('')
-     
     return means
 
-get_means()
+
+means = get_means()
+
+print(means['2200']['0'])
+print(means['2200']['1'])
+print(means['2200']['2'])
+print(means['2200'])

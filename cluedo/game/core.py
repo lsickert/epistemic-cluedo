@@ -1,6 +1,7 @@
 """This module contains the core game functionality"""
 
 import cluedo.game.init as init
+import cluedo.game.helper as helper
 import cluedo.logic_checker.kripke_model as kripke
 import cluedo.logic_checker.formulas as formulas
 import cluedo.game.player as player_class
@@ -36,16 +37,18 @@ def start_game(player_orders, controllable_players=1, num_characters: int = 6, n
     pbar.update(1)
     hand_cards = _split_hand_cards(num_players, clue_deck)
 
-    list_of_colors = ["scarlett", "green", "mustard", "plum", "peacock", "white"]
+    list_of_colors = helper.get_characters()
 
     # initialize players
     for player, order in enumerate(player_orders):
         pbar.set_description(f"Create player {str(player+1)}")
         pbar.update(1)
-        color = random.choice(list_of_colors)   # Assign a color to each player, important for game rules and starting positions
-        list_of_colors.remove(color)            # Remove color from list, such that each player has an unique color.
+        # Assign a color to each player, important for game rules and starting positions
+        color = random.choice(list_of_colors)
+        # Remove color from list, such that each player has an unique color.
+        list_of_colors.remove(color)
         players[str(player+1)] = player_class.Player((player+1), hand_cards[player],
-                                                     base_model, characters, weapons, rooms, order, color, player < controllable_players)
+                                                     base_model, characters, weapons, rooms, 2, color["id"], player < controllable_players,)
 
     # build the hand card models of the other players for each player
     for player in players.values():
@@ -103,15 +106,20 @@ def game_round(player_list) -> player_class.Player:
         move = player.move(suggestion)
         print(f"player {player.player_id} moves to: {move}")
 
-        if player.location == 'pathways':   # Players can not make a suggestion in the pathways between rooms.
-            print(f"player {player.player_id} can not make a suggestion in the pathways between rooms.")
+        # Players can not make a suggestion in the pathways between rooms.
+        if player.location == "pathways":
+            print(
+                f"player {player.player_id} can not make a suggestion in the pathways between rooms.")
             continue
 
         print(f"player {player.player_id} suggests: {suggestion}")
 
-        if move != suggestion[2]:               # If this ever comes up, then there is something that needs to be changed to the 
-            print("illegal suggestion!!!")      # move or suggestion function, it has not happened yet, but until we hand this in
-            return 0                            # this will tell us that this implementation works.
+        # If this ever comes up, then there is something that needs to be changed to the
+        if move != suggestion[2]:
+            # move or suggestion function, it has not happened yet, but until we hand this in
+            print("illegal suggestion!!!")
+            # this will tell us that this implementation works.
+            return 0
 
         for character in player_list.values():
             if character.color == suggestion[0]:

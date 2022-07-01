@@ -6,6 +6,7 @@ import random
 import itertools
 import cluedo.game.helper as helper
 
+
 class Player:
     """all functions and properties of an individual player"""
 
@@ -28,14 +29,15 @@ class Player:
 
         print(f"Player {player_id} has the following cards: {hand_cards}")
 
-    def move(self, suggestion, room = 'choice'):
+    def move(self, suggestion, room="choice"):
         """
         Move to the specified room, or leave empty for 'choice' to let the player decide based on 'random' parameter.
         If the `random` parameter is set to true, then the player will move to a random room, otherwise move to the room with the highest information gain.
         """
-        if room == 'choice':
-            possible_rooms = helper.get_possible_rooms(self.location, self.color)
-            self.location = suggestion[2] if suggestion[2] in possible_rooms else 'pathways'
+        if room == "choice":
+            possible_rooms = helper.get_possible_rooms(
+                self.location, self.color)
+            self.location = suggestion[2] if suggestion[2] in possible_rooms else "pathways"
         else:
             self.location = room    # Move to room
 
@@ -49,7 +51,7 @@ class Player:
         if self.controllable:
             return self._user_control()
 
-        if self.higher_order >= 0 and not random_sugg:
+        if self.higher_order >= 1 and not random_sugg:
             characters = []
             weapons = []
             rooms = []
@@ -89,7 +91,6 @@ class Player:
             self.latest_suggestion = suggestion
             return suggestion
 
-
         options = []
         for world in self.goal_model.worlds:
             if list(world.assignment)[2] in helper.get_possible_rooms(self.location):
@@ -102,8 +103,6 @@ class Player:
             suggestion.append(prop)
         self.latest_suggestion = suggestion
         return suggestion
-
-
 
     def check_own_hand_cards(self, suggestion, opponent: str, use_knowledge: bool = None):
         """checks if the player has one of the suggested cards in his own hand cards

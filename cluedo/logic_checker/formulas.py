@@ -226,9 +226,7 @@ class Or:
         return "(" + self.left.__str__() + " " + u"\u2228" + " " + self.right.__str__() + ")"
 
 
-
 """This module contains functions to create the individual formulas used in the game."""
-
 
 def character_weapon_room_and(character: str, weapon: str, room: str) -> And:
     """Formula to check for (character AND weapon AND room)"""
@@ -261,6 +259,7 @@ def knows_has_specific_card(card: str) -> Box:
     """
     return Box(Atom(card))
 
+
 def agent_knows_has_specific_card(card: str, agent: str) -> Box_a:
     """Formula to check if a player knows about having a specific cards.
     Only works in multi-agent Kripke models, use `knows_has_specific_card()` for single-Kripke models
@@ -274,17 +273,20 @@ def knows_not_has_specific_card(card: str) -> Box:
     """
     return Box(Not(Atom(card)))
 
+
 def agent_knows_not_has_specific_card(card: str, agent: str) -> Box_a:
     """Formula to check if a player knows about not having a specific cards
     Only works in multi-agent Kripke models, use `knows_not_has_specific_card()` for single-Kripke models
     """
     return Box_a(agent, Not(Atom(card)))
 
+
 def knows_character_weapon_room_or(character: str, weapon: str, room: str):
     """Formula to check if a player knows about either a character, weapon, or room
         Only works in single-agent Kripke models, use `agent_knows_character_weapon_room_or()` for multi-Kripke models
     """
     return Box(Or(Atom(character), Or(Atom(weapon), Atom(room))))
+
 
 def agent_knows_character_weapon_room_or(character: str, weapon: str, room: str, agent: str):
     """Formula to check if a player knows about either a character, weapon, or room

@@ -95,20 +95,19 @@ class Player:
         possible_matches = [
             card for card in self.hand_cards if card in temp_sugg]
 
-        if len(possible_matches) > 0:
-            random.shuffle(possible_matches)
+        if not possible_matches:
+            return None
 
-            if len(possible_matches) > 1 and (self.higher_order > 1 or use_knowledge):
-                for match in possible_matches:
-                    if formulas.agent_knows_has_specific_card(match, opponent).semantic(self.own_hand_card_model, "w1"):
-                        # we do not need to update model, since the opponent will not gain any new knowledge here
-                        return match
+        random.shuffle(possible_matches)
+        if len(possible_matches) > 1 and (self.higher_order > 1 or use_knowledge):
+            for match in possible_matches:
+                if formulas.agent_knows_has_specific_card(match, opponent).semantic(self.own_hand_card_model, "w1"):
+                    # we do not need to update model, since the opponent will not gain any new knowledge here
+                    return match
+        
+        self.update_own_hand_cards_model(possible_matches[0], opponent)
+        return possible_matches[0]
 
-            self.update_own_hand_cards_model(possible_matches[0], opponent)
-
-            return possible_matches[0]
-
-        return possible_matches
 
     def check_other_hand_cards(self):
         """Check the hand card models of all other players if it is known that they have a specific card and update the own goal model to exclude that card"""

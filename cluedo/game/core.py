@@ -54,35 +54,31 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
     winner_found = False
     game_turn = 1
     while not winner_found:
-        winner_found, winner_id, winner_suggestion = game_round(players)
+        winner_found, winner, winner_suggestion = game_round(players)
         game_turn += 1
 
-    return winner_found, winner_id, winner_suggestion, goal_deck, game_turn
+    return winner, winner_suggestion, goal_deck, game_turn
 
 
 def game_round(player_list):
 
     for player in player_list.values():
+        # Find suggestion and let agent move
+        suggestion = _player_move(player)
 
-        suggestion = player.make_suggestion()
-        move = player.move(suggestion)
-        print(f"player {player.player_id} moves to: {move}")
-
-        if player.location == 'pathways':   # Players can not make a suggestion in the pathways between rooms.
-            print(f"player {player.player_id} can not make a suggestion in the pathways between rooms.")
-            continue
-
-        print(f"player {player.player_id} suggests: {suggestion}")
-
-        if move != suggestion[2]:               # If this ever comes up, then there is something that needs to be changed to the 
-            print("illegal suggestion!!!")      # move or suggestion function, it has not happened yet, but until we hand this in
-            return 0                            # this will tell us that this implementation works.
-
+        # Bring accused player to the accuser's location
         for character in player_list.values():
             if character.color == suggestion[0]:
                 move = character.move(suggestion)
                 print(f"player {character.player_id} is moved to:")
                 print(move)
+
+        # Check if next player has the cards
+        winner_found, winner, winner_suggestion = _check_next_players(
+            player_list, suggestion)
+
+        if winner_found:
+            return True, winner, winner_suggestion
 
         i = 1
         # This loop and if statement make it such that the next opponent is checked for cards,
@@ -128,7 +124,7 @@ def game_round(player_list):
             i += 1
         else:
             # none of the other players has any of the cards of the suggestion, so we can safely assume that this sugggestion is correct
-            return True, player.player_id, suggestion
+            return True, player, suggestion
 
         # check if we can exclude any additional cards from the goal model since it is known by deduction that another player has them on their hand
         player.check_other_hand_cards()
@@ -136,9 +132,45 @@ def game_round(player_list):
         accusation = player.check_winning_possibility()
 
         if len(accusation) > 0:
-            return True, player.player_id, accusation
+            return True, player, accusation
 
     return False, None, None
+
+
+def _check_next_players(suggestion, player_list, player):
+    i = 1
+    # This loop and if statement make it such that the next opponent is checked for cards,
+    while i < len(player_list):
+        # rather than 3 checking -> [1-2-4-5-6], we have 3 checking -> [4-5-6-1-2].
+        opponent = int(player.player_id) + i
+        if opponent > len(player_list):
+            opponent = opponent - len(player_list)
+
+        matching_card = player_list[str(
+            opponent)].check_own_hand_cards(suggestion, str(player.player_id))
+        print(
+            f"matching hand cards player  {str(opponent)}: {matching_card}")
+
+        # stop the round if a matching card is found
+        if len(matching_card) > 0:
+            return opponent.player_id, matching_card[0]
+
+
+def _player_move(player):
+        suggestion = player.make_suggestion()
+        move = player.move(suggestion)
+        print(f"player {player.player_id} moves to: {move}")
+
+        if player.location == 'pathways':   # Players can not make a suggestion in the pathways between rooms.
+            print(f"player {player.player_id} can not make a suggestion in the pathways between rooms.")
+            return None
+
+        print(f"player {player.player_id} suggests: {suggestion}")
+
+        if move != suggestion[2]:               # If this ever comes up, then there is something that needs to be changed to the 
+            print("illegal suggestion!!!")      # move or suggestion function, it has not happened yet, but until we hand this in
+            exit(0)                             # this will tell us that this implementation works.
+
 
 
 def _split_hand_cards(num_players: int, clue_deck: list) -> list:

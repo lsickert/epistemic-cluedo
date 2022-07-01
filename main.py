@@ -4,6 +4,16 @@ import cluedo.game.helper as helper
 
 import sys
 
+def run_single_game(num_players, controllable_players, num_characters, num_weapons, num_rooms):
+    winner, winner_suggestion, goal_deck, game_turn = game.start_game(num_players, controllable_players, num_characters, num_weapons, num_rooms)
+    if winner_found:
+        print(f"Player {winner.id} won in {game_turn} turns")
+        print(f"Suggestion: {winner_suggestion}")
+        print(f"Goal deck: {goal_deck}")
+        return winner
+    else:
+        print("No winner found")
+
 if __name__ == "__main__":
     if len(sys.argv) != 1:
         max_players = len(helper.get_characters())
@@ -42,17 +52,17 @@ if __name__ == "__main__":
 
         while num_rooms > max_rooms:
             num_rooms = int(input(f"Please choose at most {max_rooms} rooms! "))
-    
+           
+        nr_of_games = 1
+
     else:
         num_players = 4
         controllable_players = 0
         num_characters = 7
         num_weapons = 7
         num_rooms = 7
+        nr_of_games = 10
 
-    winner_found, winner_id, winner_suggestion, goal_deck, game_turn = game.start_game(num_players, controllable_players,
-                                                                                       num_characters, num_weapons, num_rooms)
-
-    print(
-        f"player {winner_id} won the game with the suggestion {winner_suggestion} in round {game_turn}")
-    print(f"goal deck: {goal_deck}")
+    for _ in range(nr_of_games):
+        winner, winner_suggestion, goal_deck, game_turn = game.start_game(num_players, controllable_players,
+                                                                          num_characters, num_weapons, num_rooms)

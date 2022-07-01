@@ -6,7 +6,7 @@ permalink: /results/
 
 Firstly we found that almost all games will end by a player making a suggestion that no other player has on their hand and therefore winning the game by default before a player was actually able to fully deduct the goal deck. While this usually does not happen as much with human players, it is a result of the technical limitations of our implementation, where players will only make an accusation when they have ruled out all but one possible card combination in the goal deck.
 
-The four setups consist of the following settings:
+We have created four setups, consisting of the following settings:
 
 1:    2 agents of order 0 and 1 agents of order 2. 6 murderers, 6 weapons and 7 rooms.  
 2:    2 agents of order 1 and 2 agents of order 2. 6 murderers, 6 weapons and 7 rooms.  

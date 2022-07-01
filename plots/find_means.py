@@ -36,5 +36,7 @@ def get_means():
         print(k)
         print(v)
         print('')
+     
+    return means
 
 get_means()

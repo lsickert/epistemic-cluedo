@@ -131,11 +131,11 @@ def game_round(player_list):
                 # every other player knows that the opponent has at least one of the three cards in his hand
                 for other_player in player_list.values():
 
-                    if other_player.player_id is not player.player_id:
+                    if other_player.player_id is not player.player_id and other_player.higher_order >= 1:
                         other_player.update_goal_model(formulas.not_character_weapon_room_and(
                             suggestion[0], suggestion[1], suggestion[2]))
 
-                        if other_player.player_id is not opponent:
+                        if other_player.player_id is not opponent and other_player.higher_order >= 1:
                             other_player.update_hand_cards_model(str(opponent), formulas.character_weapon_room_or(
                                 suggestion[0], suggestion[1], suggestion[2]))
                 break
@@ -143,7 +143,7 @@ def game_round(player_list):
                 # every player knows that this player does not have any of the three cards in his hand
                 for inner_player in player_list.values():
 
-                    if inner_player.player_id is not opponent:
+                    if inner_player.player_id is not opponent and inner_player.higher_order >= 1:
                         inner_player.update_hand_cards_model(str(opponent), formulas.not_character_weapon_room_and(
                             suggestion[0], suggestion[1], suggestion[2]))
 

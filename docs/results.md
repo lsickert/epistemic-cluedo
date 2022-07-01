@@ -6,6 +6,12 @@ permalink: /results/
 
 Firstly we found that almost all games will end by a player making a suggestion that no other player has on their hand and therefore winning the game by default before a player was actually able to fully deduct the goal deck. While this usually does not happen as much with human players, it is a result of the technical limitations of our implementation, where players will only make an accusation when they have ruled out all but one possible card combination in the goal deck.
 
+The four setups consist of the following settings:
+
+1:    2 agents of order 0 and 1 agents of order 2. 6 murderers, 6 weapons and 7 rooms.  
+2:    2 agents of order 1 and 2 agents of order 2. 6 murderers, 6 weapons and 7 rooms.  
+3:    2 agents of order 0 and 2 agents of order 2. 6 murderers, 6 weapons and 7 rooms.  
+3:    2 agents of order 0, 2 agents of order 1 and 2 agents of order 2. 6 murderers, 7 weapons and 8 rooms.  
 
 Having run four simulation setups 25 times, the win rates for each order represented by the agents is shown. In the left-top plot, we can see that the 2 agents of order 2 have a combined win percentage of 96%, against 4% for the agents of order 0 in their setup. The top-right shows the win percentages of 48% for order 2, 52% for order 1 and 0% for the order 0 agents. The bottom left compares the win rate of the 2 order 1 agents (100%) versus the 2 order 0 agents (0%), and the final bottom right plot shows the 52% win rate for the 2 order 2 agents against the 2 order 1 agents with 48%.
 

@@ -50,7 +50,7 @@ for folder in os.listdir(f'.{s}results'):
     
 
 fig, axs = plt.subplots(2, 2, figsize=(9, 9), sharey=False)
-fig.suptitle("Winners for game with indicated players", fontsize=20)
+fig.suptitle("Agent order win percentages for game with indicated player setup", fontsize=20)
 plt.subplots_adjust(hspace=0.3)
 fontsize = 13
 

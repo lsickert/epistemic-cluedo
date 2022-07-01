@@ -7,8 +7,9 @@ import cluedo.game.player as player_class
 from tqdm import tqdm
 import random
 
+def start_game(player_orders, controllable_players=1, num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9):
 
-def start_game(num_players: int = 6, controllable_players=1, num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9):
+    num_players = len(player_orders)
     pbar = tqdm(desc="Starting game setup", total=(
         num_players*2 + num_players*num_players + 5))
 
@@ -38,13 +39,13 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
     list_of_colors = ["scarlett", "green", "mustard", "plum", "peacock", "white"]
 
     # initialize players
-    for player in range(num_players):
+    for player, order in enumerate(player_orders):
         pbar.set_description(f"Create player {str(player+1)}")
         pbar.update(1)
         color = random.choice(list_of_colors)   # Assign a color to each player, important for game rules and starting positions
         list_of_colors.remove(color)            # Remove color from list, such that each player has an unique color.
         players[str(player+1)] = player_class.Player((player+1), hand_cards[player],
-                                                     base_model, characters, weapons, rooms, 2, color, player < controllable_players,)
+                                                     base_model, characters, weapons, rooms, order, color, player < controllable_players)
 
     # build the hand card models of the other players for each player
     for player in players.values():
@@ -73,17 +74,29 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
 
     print("starting game")
 
-    winner_found = False
+    available_worlds = {}
+    for player in players.values():
+        if player.higher_order not in available_worlds:
+            available_worlds[player.higher_order] = []
+        available_worlds[player.higher_order] += [player.get_nr_available_worlds()]
+
+
+    winner = None
     game_turn = 1
-    while not winner_found:
-        winner_found, winner_id, winner_suggestion = game_round(players)
+    while winner is None:
+        print(f"Turn = {game_turn}")
+        winner = game_round(players)
         game_turn += 1
+        for player in players.values():
+            available_worlds[player.higher_order] += [player.get_nr_available_worlds()]
+    
+    print(f"Winner is player {winner.player_id} of order {winner.higher_order} in turn {game_turn}")
+    print(f"The winning suggestion was {winner.latest_suggestion} with goal deck {goal_deck}")
 
-    return winner_found, winner_id, winner_suggestion, goal_deck, game_turn
+    return winner, available_worlds
 
 
-def game_round(player_list):
-
+def game_round(player_list) -> player_class.Player:
     for player in player_list.values():
 
         suggestion = player.make_suggestion()
@@ -150,7 +163,7 @@ def game_round(player_list):
             i += 1
         else:
             # none of the other players has any of the cards of the suggestion, so we can safely assume that this sugggestion is correct
-            return True, player.player_id, suggestion
+            return player
 
         # check if we can exclude any additional cards from the goal model since it is known by deduction that another player has them on their hand
         player.check_other_hand_cards()
@@ -158,9 +171,9 @@ def game_round(player_list):
         accusation = player.check_winning_possibility()
 
         if len(accusation) > 0:
-            return True, player.player_id, accusation
+            return player
 
-    return False, None, None
+    return None
 
 
 def _split_hand_cards(num_players: int, clue_deck: list) -> list:

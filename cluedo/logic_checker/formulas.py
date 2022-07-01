@@ -1,3 +1,6 @@
+#############################################
+# COPIED FROM MLSOLVER DUE TO IMPORT ISSUES #
+#############################################
 """Modal logic formula module
 
 This module unites all operators from propositional and modal logic.
@@ -225,6 +228,10 @@ class Or:
     def __str__(self):
         return "(" + self.left.__str__() + " " + u"\u2228" + " " + self.right.__str__() + ")"
 
+
+#################################################
+########### OWN CONTRIBUTION ####################
+#################################################
 
 
 """This module contains functions to create the individual formulas used in the game."""

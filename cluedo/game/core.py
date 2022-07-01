@@ -1,6 +1,7 @@
 """This module contains the core game functionality"""
 
 import cluedo.game.init as init
+import cluedo.game.helper as helper
 import cluedo.logic_checker.kripke_model as kripke
 import cluedo.logic_checker.formulas as formulas
 import cluedo.game.player as player_class
@@ -35,8 +36,7 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
     pbar.update(1)
     hand_cards = _split_hand_cards(num_players, clue_deck)
 
-    list_of_colors = ["scarlett", "green",
-                      "mustard", "plum", "peacock", "white"]
+    list_of_colors = helper.get_characters()
 
     # initialize players
     for player in range(num_players):
@@ -47,7 +47,7 @@ def start_game(num_players: int = 6, controllable_players=1, num_characters: int
         # Remove color from list, such that each player has an unique color.
         list_of_colors.remove(color)
         players[str(player+1)] = player_class.Player((player+1), hand_cards[player],
-                                                     base_model, characters, weapons, rooms, 2, color, player < controllable_players,)
+                                                     base_model, characters, weapons, rooms, 2, color["id"], player < controllable_players,)
 
     # build the hand card models of the other players for each player
     for player in players.values():

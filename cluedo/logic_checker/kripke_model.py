@@ -1,5 +1,4 @@
 """This module handles all functions related to creating, updating and validating the Kripke model underlying the game"""
-from itertools import chain, combinations
 import copy
 import itertools
 
@@ -8,6 +7,10 @@ import itertools
 Provides a tool to model Kripke structures and solve them in addition to a
 modal logic formula.
 """
+
+import copy
+
+from itertools import chain, combinations
 
 
 class KripkeStructure:
@@ -28,8 +31,7 @@ class KripkeStructure:
         of it's nodes forces a given formula.
         """
         for i, subset in enumerate(self.get_power_set_of_worlds()):
-            ks = KripkeStructure(self.worlds.copy(),
-                                 copy.deepcopy(self.relations))
+            ks = KripkeStructure(self.worlds.copy(), copy.deepcopy(self.relations))
             for element in subset:
                 ks.remove_node_by_name(element)
             if ks.nodes_not_follow_formula(formula) == []:
@@ -125,6 +127,7 @@ class World:
 
     def __str__(self):
         return "(" + self.name + ',' + str(self.assignment) + ')'
+
 
 
 def create_multi_kripke_model(possible_worlds: list, num_players: int, exclude_players: list = None) -> KripkeStructure:

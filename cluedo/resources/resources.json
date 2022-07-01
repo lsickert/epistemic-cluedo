@@ -80,7 +80,7 @@
         }
     ],
     "rooms": [
-        {
+        {   
             "id": "kitchen",
             "name": "Kitchen",
             "position": "top left",

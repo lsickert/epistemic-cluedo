@@ -27,11 +27,10 @@ class KripkeStructure:
         of it's nodes forces a given formula.
         """
         for i, subset in enumerate(self.get_power_set_of_worlds()):
-            ks = KripkeStructure(self.worlds.copy(),
-                                 copy.deepcopy(self.relations))
+            ks = KripkeStructure(self.worlds.copy(), copy.deepcopy(self.relations))
             for element in subset:
                 ks.remove_node_by_name(element)
-            if not ks.nodes_not_follow_formula(formula):
+            if ks.nodes_not_follow_formula(formula) == []:
                 return ks
 
     def remove_node_by_name(self, node_name):
@@ -123,4 +122,4 @@ class World:
         return self.name == other.name and self.assignment == other.assignment
 
     def __str__(self):
-        return "(" + self.name + "," + str(self.assignment) + ")"
+        return "(" + self.name + ',' + str(self.assignment) + ')'

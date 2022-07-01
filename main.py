@@ -81,7 +81,7 @@ if __name__ == "__main__":
         filename += str(player)
 
     with open(f"results{s}{filename}{s}run.txt", "w") as f:
-        for idx in range(25):
+        for idx in range(10):
             winner, available_worlds = game.start_game(players, controllable_players, num_characters, num_weapons, num_rooms)
             f.write(f"Player {winner.player_id} of order {winner.higher_order} wins\n")
             results[winner.higher_order] += 1

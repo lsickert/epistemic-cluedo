@@ -76,7 +76,7 @@ def timing(f):
     return wrap
 
 
-def get_possible_rooms(location, color):
+def get_possible_rooms(location, color = None):
     """
     Returns possible rooms where the players could move, this includes adjacent rooms and rooms accessible with secret passages.
     Also returns the rooms for the starting positions when the game starts.
@@ -94,6 +94,9 @@ def get_possible_rooms(location, color):
             possible_rooms = ['conservatory', 'billiard']
         if color == 'white':
             possible_rooms = ['ballroom', 'kitchen']
+        else:
+            possible_rooms = ['pathways']
+        possible_rooms = random.choice(possible_rooms)
 
     else:                   # Movement possibilities of rooms, adjacent, secret passages and self.
         rooms_with_accesability_to = {

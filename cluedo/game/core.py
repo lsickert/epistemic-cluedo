@@ -48,7 +48,7 @@ def start_game(player_orders, controllable_players=1, num_characters: int = 6, n
         # Remove color from list, such that each player has an unique color.
         list_of_colors.remove(color)
         players[str(player+1)] = player_class.Player((player+1), hand_cards[player],
-                                                     base_model, characters, weapons, rooms, 2, color["id"], player < controllable_players,)
+                                                     base_model, characters, weapons, rooms, order, color["id"], player < controllable_players,)
 
     # build the hand card models of the other players for each player
     for player in players.values():

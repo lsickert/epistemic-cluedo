@@ -1,5 +1,7 @@
 """contains the player class"""
 import copy
+
+from sympy import O
 import cluedo.logic_checker.formulas as formulas
 import cluedo.logic_checker.kripke_model as kripke
 import random
@@ -22,7 +24,7 @@ class Player:
         self.controllable = controllable
         self.higher_order = higher_order
         self.color = color
-        self.location = None
+        self.location = helper.get_possible_rooms(None, self.color)
         self.latest_suggestion = None
 
         self._update_model_with_hand_cards()

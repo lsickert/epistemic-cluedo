@@ -20,7 +20,7 @@ Furthermore we will assume a set of players $Pl$.
 
 The Kripke model of the goal stack is created by assigning each possible combination of a character, weapon and room card to a world and creating reflexive, transitive and euclidean accessibility relations between them. In each world exactly three propositions corresponding to the three cards of this world are true, while the propositions for all other cards are false. One those possible worlds has been shown as $w_1$ above. In this world the character *peacock*, weapon *rope* and room *library* are in the goal deck and need therefore be found by the players.
 
-Each player has their own internal representation of this Kripke model which is updated each turn. At the beginning of the game they can already deduce that any world containing at least one of their own hand cards cannot represent the goal deck and can therefore be removed from the model. This constitutes and update of the model with the constraint formula $(\mathbf{M}) \models \neg c \land \neg w \land \neg r$ or, by extension through the axiom (A3) of  $\mathbf{S5}(m)$  $(\mathbf{M}) \models K_m(\neg c \land \neg w \land \neg r)$. After that, there are two main update functions. First, when the player ($m$) is shown a card by another player ($n$), they know that any world containing this card cannot be in the goal deck. This corresponds to the formula $(\mathbf{M}) \models K_m( \neg k)$. Second, all other players can deduce from this that at least one of the three cards in the suggestion by $m$ cannot be in the goal deck, which corresponds to the formula  $(\mathbf{M}) \models K_{p \in Pl \| p \neq m,n}( \neg c \lor \neg w \lor \neg r )$.
+Each player has their own internal representation of this Kripke model which is updated each turn. At the beginning of the game they can already deduce that any world containing at least one of their own hand cards cannot represent the goal deck and can therefore be removed from the model. This constitutes and update of the model with the constraint formula $(\mathbf{M}) \models \neg k$ or, by extension through the axiom (A3) of  $\mathbf{S5}(m)$  $(\mathbf{M}) \models K_m\neg k$ for all cards $k$ in the players hand. After that, there are two main update functions. First, when the player ($m$) is shown a card by another player ($n$), they know that any world containing this card cannot be in the goal deck. This corresponds again to the formula $(\mathbf{M}) \models K_m( \neg k)$. Second, all other players can deduce from this that at least one of the three cards in the suggestion by $m$ cannot be in the goal deck, which corresponds to the formula  $(\mathbf{M}) \models K_{p \in Pl \| p \neq m,n}( \neg c \lor \neg w \lor \neg r )$.
 
 Once a player has eliminated all worlds except one, they know that the three cards proposed in this world have to be in the goal deck, i.e. $(\mathbf{M}) \models K_m(c^\ast \land w^\ast \land r\ast)$. Alternatively the game might end early when a player makes a suggestion that no other player can show a card for, after which the player will make an accusation with these three cards to win the game. This function, however, is not explicitly modeled in the Kripke model. We found this final update step to be computationally unnecessary, since it will always create a model which contains only one world equivalent to an update with the formula shown above.
 
@@ -32,16 +32,35 @@ Again, each player $m$ has their own internal representation of these Kripke mod
 
 Once a proposition for a specific card is true in all remaining worlds of the handcard Kripke model of player $m$ for a another player $n$, then $m$ knows that $n$ has to have this card in their hand ($(\mathbf{M}) \models K_m k$) and can therefore deduce that it cannot be in the goal deck  ($(\mathbf{M}) \models K_m \neg k$). This is checked each turn for every player.
 
-Additionally each player also has a Kripke model for the knowledge other players have about their own handcards. This model is created through a power set of possible hand card combinations, e.g. for a player with the handcards *white* and *dagger* four worlds with the true propositions \{\{\},\{*white*\},\{*dagger*\},\{*white*,*dagger*\}\} would be created. The model will be created with  reflexive, transitive and euclidean accessibility relations between those worlds for each other player. Each time $m$ shows another player $n$ any of their handcards, the model will be updated with the formula $(\mathbf{M}) \models K_n k$. The player $m$ will then use this model to determine which handcard to show another player $n$ and preferably show them a handcard where they know that the other player $n$ already knows that this card is in the hand of $m$.
+Additionally each player also has a Kripke model for the knowledge other players have about their own handcards. This model is created through a power set of possible hand card combinations, e.g. for a player with the handcards *white* and *dagger* four worlds with the true propositions \{\{\},\{*white*\},\{*dagger*\},\{*white*,*dagger*\}\} would be created. The model will be created with  reflexive, transitive and euclidean accessibility relations between those worlds for each other player. Each time $m$ shows another player $n$ any of their handcards, the model will be updated with the formula $(\mathbf{M}) \models K_n k$. The player $m$ will then use this model to determine which handcard to show another player $n$ and preferably show them a handcard where they know that the other player $n$ already knows that this card is in the hand of $m$, i.e. according to the formula $(\mathbf{M}) \models K_m K_n k$.
 
 ## Decision Making
 
-*The contents of this section are still subject to change in later iterations of the game, since their implications are not fully worked out yet*
+Throughout the game the players will have to make decisions about which suggestions to make based on their internal knowledge. We decided to split the players into three distinct groups that limit what knowledge is available to them and can be used to build new suggestions:
 
-'higher-order logic players'
-At the start of each turn the player will choose the room which is still present in the largest amount of possible worlds and move towards it, since eliminating this room will give them the greatest amount of knowledge. They will make the same decision for the character and weapon.
+**Zero-Order Knowledge Agents:**
+These agents possess no internal reasoning about their own knowledge and can only react to the cards that are presented to them as facts. The following propositions and limitations are true for any zero-order agent $m$:
 
-The lower-order logic players that only use knowledge of their own cards will first move to random room they can directly reach that is still present in their knowledge of possible goal decks, then they make a suggestion that includes the cards of a goal deck they consider possible that includes the room they are in. If they cannot directly reach a room that is within goal decks that they consider possible, then the player will move into the pathways between rooms, which in their next turn can lead them to any room.
+* They will update their goal model once a card is presented to them with the formula  $(\mathbf{M}) \models \neg k$
+* They will not update their goal model when a card is shown to another player to deduct that this player needs to have at least one of the three cards of the suggestion in his hand
+* They will make a suggestion by randomly choosing any of the worlds possible to them
+* They will move randomly across the playing board based on their suggestion in the current turn
+* They will not check their knowledge of other players hand cards to exclude propositions from their goal model
+* If more than one of their handcardss matches the suggestion of another player they will choose the card to show them randomly
+
+**First-Order Knowledge Agents:**
+These agents can reason about their own knowledge to decide which suggestion to make in a given turn.  The following propositions and limitations are true for any first-order agent $m$:
+
+* They will update their goal model once a card is presented to them with the formula  $(\mathbf{M}) \models K_m \neg k$
+* They will update their goal model when a card is shown to another player to deduct that this player needs to have at least one of the three cards of the suggestion in his hand, i.e. by using the formula  $(\mathbf{M}) \models K_m \neg (c \land w \land r)$
+* They will make a suggestion by calculating which character, weapon and room are present in the most possible worlds in their goal model and combine these three values into one suggestion, meaning that their suggestion is not limited to a single world, but takes the information from all possible worlds into account
+* They will move across the playing board based on their suggestion in the current turn
+* They will check their knowledge of other players hand cards to exclude propositions from their goal model
+* If more than one of their handcards matches the suggestion of another player they will choose the card to show them randomly
+
+
+**Second-Order Knowledge Agents:**
+These agents can reason not only about their own knowledge but also about the knowledge of other agents at each given turn. They base their decisions on the same propositions and limitations as first-order agents, with one notable exception. They will use their knowledge of the knowledge other players have of their handcards to decide which card to show another player when more than one of their handcards matches a suggestion of that player.
 
 ## Implementation
 

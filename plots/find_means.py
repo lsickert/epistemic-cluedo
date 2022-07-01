@@ -20,20 +20,21 @@ def averages_for_file(filename, agent_order):
     return means
     
 
-        
+def get_means():
+    means = {}
+    for folder in os.listdir(f'.{s}results'):
+        #Load run.txt in folder
+        means[folder] = {}
+        for filename in os.listdir(f".{s}results{s}{folder}"):
+            if "run" in filename:
+                continue
 
-means = {}
-for folder in os.listdir(f'.{s}results'):
-    #Load run.txt in folder
-    means[folder] = {}
-    for filename in os.listdir(f".{s}results{s}{folder}"):
-        if "run" in filename:
-            continue
+            filepath = f".{s}results{s}{folder}{s}{filename}"
+            means[folder][filename[0]] = averages_for_file(filepath, folder)
 
-        filepath = f".{s}results{s}{folder}{s}{filename}"
-        means[folder][filename[0]] = averages_for_file(filepath, folder)
+    for k, v in means.items():
+        print(k)
+        print(v)
+        print('')
 
-for k, v in means.items():
-    print(k)
-    print(v)
-    print('')
+get_means()

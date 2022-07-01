@@ -2,6 +2,7 @@ import os
 from os import sep as s
 
 from numpy import mean
+import matplotlib.pyplot as plt
 
 def averages_for_file(filename, agent_order):
     vals = []
@@ -42,4 +43,40 @@ def get_means():
      
     return means
 
-get_means()
+lib = get_means()
+
+results = []
+results.append(lib['1100']['1'])
+results.append(lib['1100']['0'])
+results.append(lib['2200']['2'])
+results.append(lib['2200']['0'])
+results.append(lib['2211']['2'])
+results.append(lib['2211']['1'])
+results.append(lib['221100']['2'])
+results.append(lib['221100']['1'])
+results.append(lib['221100']['0'])
+
+plt.plot(results[0])
+plt.plot(results[1])
+
+plt.savefig(f"plots{s}1100plot.png")
+
+plt.clf()
+plt.plot(results[2])
+plt.plot(results[3])
+
+plt.savefig(f"plots{s}2200plot.png")
+
+plt.clf()
+plt.plot(results[4])
+plt.plot(results[5])
+
+plt.savefig(f"plots{s}2211plot.png")
+
+plt.clf()
+plt.plot(results[6])
+plt.plot(results[7])
+plt.plot(results[8])
+
+plt.savefig(f"plots{s}221100plot.png")
+

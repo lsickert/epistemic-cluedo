@@ -7,6 +7,7 @@ def averages_for_file(filename, agent_order):
     vals = []
     with open(filename, "r") as f:
         lines = f.readlines()
+        ix = 0
         for line in lines:
             values = [int(x) for x in line.split(' ')[:-1]]
             for idx, value in enumerate(values):
@@ -15,8 +16,10 @@ def averages_for_file(filename, agent_order):
                 vals[idx // 2].append(value)
     
     means = []
-    for val in values:
-        means.append(mean(val))
+    for val in vals:
+        avg = mean(val)
+        avg = int(avg) if avg % 1 < 0 else int(avg+1)
+        means.append(avg)
     return means
     
 

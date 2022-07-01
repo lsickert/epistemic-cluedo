@@ -49,7 +49,7 @@ class Player:
         if self.controllable:
             return self._user_control()
 
-        if self.higher_order > 0 and not random_sugg:
+        if self.higher_order >= 1 and not random_sugg:
             characters = []
             weapons = []
             rooms = []
@@ -99,7 +99,7 @@ class Player:
             return None
 
         random.shuffle(possible_matches)
-        if len(possible_matches) > 1 and (self.higher_order > 1 or use_knowledge):
+        if len(possible_matches) > 1 and (self.higher_order >= 2 or use_knowledge):
             for match in possible_matches:
                 if formulas.agent_knows_has_specific_card(match, opponent).semantic(self.own_hand_card_model, "w1"):
                     # we do not need to update model, since the opponent will not gain any new knowledge here
@@ -112,7 +112,7 @@ class Player:
     def check_other_hand_cards(self):
         """Check the hand card models of all other players if it is known that they have a specific card and update the own goal model to exclude that card"""
 
-        if self.higher_order > 0:
+        if self.higher_order >= 1:
             possible_values = set()
 
             for world in self.goal_model.worlds:

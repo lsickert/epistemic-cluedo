@@ -14,12 +14,20 @@ Having run four simulation setups 25 times, the win rates for each order represe
 
 Every agent considers a specific amount of worlds possible for the goal state during each turn. As the agents are provided with more information each turn, the amount of goal states they still deem possible decreases. This decrease in goal states are plotted below for each setup, with the graphs showing the average amount of goal states left for both agents over each run. Due to the fact that we consider a right suggestion winning, we nearly never reach an average amount of remaining goal states of 1. 
 
+
+2 of order 2 and 2 of order 0.
 [![](/plots/2200plot.png)Goal states considered possible in the setup with 2 agents of order 2 and 2 agents of order 0](/plots/2200plot.png)
 
+
+2 of order 2 and 2 of order 1.
 [![](/plots/2211plot.png)Goal states considered possible in the setup with 2 agents of order 2 and 2 agents of order 1](/plots/2211plot.png)
 
+
+2 or order 1 and 1 of order 0.
 [![](/plots/1100plot.png)Goal states considered possible in the setup with 2 agents of order 1 and 2 agents of order 0](/plots/1100plot.png)
 
+
+2 of order 2, 2 of order 1 and 2 of order 0.
 [![](/plots/221100plot.png)Goal states considered possible in the setup with 2 agents of order 2, 2 agents of order 1 and 2 agents of order 0](/plots/221100plot.png)
 
 

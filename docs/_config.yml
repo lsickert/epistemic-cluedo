@@ -40,6 +40,10 @@ header_pages:
   - about.md
   - references.md
 
+minima:
+  social_links:
+    github: lsickert/epistemic-cluedo
+
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to

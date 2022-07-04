@@ -13,3 +13,5 @@ This project has been developed by
 [Ludwig Sickert](https://github.com/lsickert)
 
 [Thijs Visee](https://github.com/ThijsVisee)
+
+The GitHub repository for this project can be found [here](https://github.com/lsickert/epistemic-cluedo)

@@ -1,0 +1,113 @@
+{
+    "characters": [
+        {
+            "id": "scarlett",
+            "name": "Miss Scarlett",
+            "starting_position": "bottom left",
+            "color": "red"
+        },
+        {
+            "id": "green",
+            "name": "Reverend Green",
+            "starting_position": "top right",
+            "color": "green"
+        },
+        {
+            "id": "mustard",
+            "name": "Colonel Mustard",
+            "starting_position": "bottom middle left",
+            "color": "yellow"
+        },
+        {
+            "id": "plum",
+            "name": "Professor Plum",
+            "starting_position": "bottom midle right",
+            "color": "purple"
+        },
+        {
+            "id": "peacock",
+            "name": "Mrs. Peacock",
+            "starting_position": "top middle right",
+            "color": "blue"
+        },
+        {
+            "id": "white",
+            "name": "Mrs. White",
+            "starting_position": "top left",
+            "color": "white"
+        }
+    ],
+    "weapons": [
+        {
+            "id": "candle",
+            "name": "Candlestick"
+        },
+        {
+            "id": "dagger",
+            "name": "Dagger"
+        },
+        {
+            "id": "pipe",
+            "name": "Lead Pipe"
+        },
+        {
+            "id": "pistol",
+            "name": "Revolver"
+        },
+        {
+            "id": "rope",
+            "name": "Rope"
+        },
+        {
+            "id": "wrench",
+            "name": "Wrench"
+        }
+    ],
+    "rooms": [
+        {   
+            "id": "kitchen",
+            "name": "Kitchen",
+            "position": "top left",
+            "secret_passage": true,
+            "secret_passage_to": "study"
+        },
+        {
+            "id": "ballroom",
+            "name": "Ballroom",
+            "position": "top middle",
+            "secret_passage": false
+        },
+        {
+            "id": "conservatory",
+            "name": "Conservatory",
+            "position": "top right",
+            "secret_passage": true,
+            "secret_passage_to": "lounge"
+        },
+        {
+            "id": "dining",
+            "name": "Dining Room",
+            "position": "middle left",
+            "secret_passage": false
+        },
+        {
+            "id": "billiard",
+            "name": "Billiard Room",
+            "position": "top middle right",
+            "secret_passage": false
+        },
+        {
+            "id": "library",
+            "name": "Library",
+            "position": "bottom middle right",
+            "secret_passage": false
+        },
+        {
+            "id": "lounge",
+            "name": "Lounge",
+            "position": "bottom left",
+            "secret_passage": true,
+            "secret_passage_to": "conservatory"
+        }
+    ]
+}

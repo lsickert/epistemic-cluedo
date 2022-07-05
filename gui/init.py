@@ -7,19 +7,11 @@ import copy
 import itertools
 
 
-def create_resource_sets(num_characters: int = 6, num_weapons: int = 6, num_rooms: int = 9) -> tuple:
+def create_resource_sets() -> tuple:
     """creates the set of characters, weapons and rooms that will be used in a game"""
     characters = _get_id_list(helper.get_characters())
     weapons = _get_id_list(helper.get_weapons())
     rooms = _get_id_list(helper.get_rooms())
-
-    random.shuffle(characters)
-    random.shuffle(weapons)
-    random.shuffle(rooms)
-
-    del characters[num_characters:]
-    del weapons[num_weapons:]
-    del rooms[num_rooms:]
 
     return characters, weapons, rooms
 

@@ -71,41 +71,42 @@ def timing(f):
         ts = time()
         result = f(*args, **kw)
         te = time()
-        print (f'func:{f.__name__} took: {te-ts} sec')
+        print(f"func:{f.__name__} took: {te-ts} sec")
         return result
     return wrap
+
 
 def get_possible_rooms(location, color):
     """
     Returns possible rooms where the players could move, this includes adjacent rooms and rooms accessible with secret passages.
     Also returns the rooms for the starting positions when the game starts.
     """
-    if location == None:    # Starting positions
-        if color == 'scarlett':
-            possible_rooms = ['hall', 'lounge']
-        if color == 'green':
-            possible_rooms = ['ballroom', 'conservatory']
-        if color == 'mustard':
-            possible_rooms = ['dining', 'lounge']
-        if color == 'plum':
-            possible_rooms = ['study', 'library']
-        if color == 'peacock':
-            possible_rooms = ['conservatory', 'billiard']
-        if color == 'white':
-            possible_rooms = ['ballroom', 'kitchen']
-    
+    if location is None:    # Starting positions
+        if color == "scarlett":
+            possible_rooms = ["hall", "lounge"]
+        if color == "green":
+            possible_rooms = ["ballroom", "conservatory"]
+        if color == "mustard":
+            possible_rooms = ["dining", "lounge"]
+        if color == "plum":
+            possible_rooms = ["study", "library"]
+        if color == "peacock":
+            possible_rooms = ["conservatory", "billiard"]
+        if color == "white":
+            possible_rooms = ["ballroom", "kitchen"]
+
     else:                   # Movement possibilities of rooms, adjacent, secret passages and self.
         rooms_with_accesability_to = {
-            'kitchen': ['ballroom', 'dining', 'study', 'kitchen'],
-            'ballroom': ['kitchen', 'conservatory', 'ballroom'],
-            'conservatory': ['ballroom', 'billiard', 'lounge', 'conservatory'],
-            'dining': ['kitchen', 'lounge', 'dining'],
-            'billiard': ['conservatory', 'library', 'billiard'],
-            'library': ['billiard', 'study', 'library'],
-            'lounge': ['dining', 'hall', 'conservatory', 'lounge'],
-            'hall': ['study', 'lounge', 'hall'],
-            'study': ['hall', 'library', 'kitchen', 'study'],
-            'pathways': ['kitchen', 'ballroom', 'conservatory', 'dining', 'billiard', 'library', 'lounge', 'hall', 'study']
+            "kitchen": ["ballroom", "dining", "study", "kitchen"],
+            "ballroom": ["kitchen", "conservatory", "ballroom"],
+            "conservatory": ["ballroom", "billiard", "lounge", "conservatory"],
+            "dining": ["kitchen", "lounge", "dining"],
+            "billiard": ["conservatory", "library", "billiard"],
+            "library": ["billiard", "study", "library"],
+            "lounge": ["dining", "hall", "conservatory", "lounge"],
+            "hall": ["study", "lounge", "hall"],
+            "study": ["hall", "library", "kitchen", "study"],
+            "pathways": ["kitchen", "ballroom", "conservatory", "dining", "billiard", "library", "lounge", "hall", "study"]
         }
 
         possible_rooms = rooms_with_accesability_to[str(location)]
